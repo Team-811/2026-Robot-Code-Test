@@ -6,11 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.aDown;
+import frc.robot.commands.aUp;
 import frc.robot.commands.toL1;
 import frc.robot.commands.toL2;
 import frc.robot.commands.toL3;
 import frc.robot.commands.toL4;
+import frc.robot.commands.toTargetHeight;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AlgieArm;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 
@@ -51,6 +55,7 @@ public class RobotContainer {
     //    public static aClaw alClaw = new aClaw();
         private final limelight lime = new limelight();
         private final Elevator el = new Elevator();
+        private final AlgieArm alArm = new AlgieArm();
       
             private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)* OperatorConstants.kSpeed; // kSpeedAt12Volts desired top speed
             private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -130,6 +135,10 @@ public class RobotContainer {
         OpController.x().whileTrue(new toL2(el));
         OpController.y().whileTrue(new toL3(el));
         OpController.b().whileTrue(new toL4(el));
+        // OpController.a().whileTrue(new toTargetHeight(el));
+        OpController.leftBumper().whileTrue(new aUp(alArm));
+        OpController.rightBumper().whileTrue(new aDown(alArm));
+
     drivetrain.registerTelemetry(logger::telemeterize);  
   }
   public double joyRightX(){

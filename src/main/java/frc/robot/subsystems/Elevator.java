@@ -20,69 +20,67 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.Encoder;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   TalonFX elMotor;
-  final DutyCycleOut dy;
+  // final DutyCycleOut dy;
   PIDController elPID ;
+  // final PositionVoltage request;
+  public Encoder encoder;
+  double pullyDiameter;
+  double gearRatio;
+  final PositionDutyCycle request;
   public Elevator() {
-    elMotor = new TalonFX(23);
-    CurrentLimitsConfigs eleLimCon = new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).withStatorCurrentLimit(40).withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(40);
-    elMotor.getConfigurator().apply(eleLimCon);
-    elPID = new PIDController(5,0 ,0);
-  //      var slot0Configs = new Slot0Configs();
-  //  slot0Configs.kP = 24;
-  //  slot0Configs.kI = 0;
-  //  slot0Configs.kD = 0.1;
-  //  elMotor.getConfigurator().apply(slot0Configs);
-    // CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
-    // cc_cfg.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    // cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    // cc_cfg.MagnetSensor.MagnetOffset = 0.4;
-    // elMotor.getConfigurator().apply(cc_cfg);
+    elMotor = new TalonFX(24);
+    encoder = new Encoder(0,1);
+    // CurrentLimitsConfigs eleLimCon = new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).withStatorCurrentLimit(40).withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(40);
+    // elMotor.getConfigurator().apply(eleLimCon); //need
+    // elPID = new PIDController(5,0 ,0);
+    // elPID.setTolerance(0.5);
+    gearRatio = 25;
+    pullyDiameter = 1.5;
+       var slot0Configs = new Slot0Configs();
+    // slot0Configs.kV = 0.12;
+   slot0Configs.kP = 2.4;
+   slot0Configs.kI = 0;
+   slot0Configs.kD = 0.1;
+   elMotor.getConfigurator().apply(slot0Configs);
+    // request = new PositionVoltage(0).withSlot(0);
+   request = new PositionDutyCycle(0);
 
-    // TalonFXConfiguration fx_cfg = new TalonFXConfiguration();
-    // fx_cfg.Feedback.FeedbackRemoteSensorID = elMotor.getDeviceID();
-    // fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-    // fx_cfg.Feedback.SensorToMechanismRatio = 1.0;
-    // fx_cfg.Feedback.RotorToSensorRatio = 12.8;
+  //  dy = new DutyCycleOut(0);
 
-    // elMotor.getConfigurator().apply(fx_cfg);
-//     var fx_cfg = new TalonFXConfiguration();
-// fx_cfg.Feedback.FeedbackRemoteSensorID = m_cancoder.getDeviceID();
-// fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-
-// m_talonFX.getConfigurator().apply(fx_cfg);
-  
-   dy = new DutyCycleOut(0);
-  // elMotor.setSelectedSensorPosition(0);
+  }
+  public double getHeight(){
+    double rotations = encoder.get();
+    double inchPerRo = (Math.PI*pullyDiameter)/gearRatio;
+    return rotations *inchPerRo;
+  }
+  public void setTargetHeight(double targetHeight){
+    double currentHeight = getHeight();
+    double toHeight = elPID.calculate(currentHeight,targetHeight);
+    elMotor.set(toHeight);
   }
   public void toFloor(){
     // elMotor.setControl(new PositionDutyCycle(1));//set some angle or a double
+    // elMotor.setControl(ControlMode.PercentOutput,elPID.calculate(0.01),0);
   }
   public void toL1(){
-    // elMotor.setControl(new PositionDutyCycle(null));//set some angle or a double
-    // elMotor.set(.3);
+
   //  elMotor.setControl(dy.withOutput(0.3));
-  //  var slot0Configs = new Slot0Configs();
-  //  slot0Configs.kP = 24;
-  //  slot0Configs.kI = 0;
-  //  slot0Configs.kD = 0.1;
-  //  elMotor.getConfigurator().apply(slot0Configs);
-  elMotor.set(1);
-  Timer.delay(2);
-  elMotor.set(0);
   //  var position = new PositionVoltage(0).withSlot(0);
   //  elMotor.setControl(position.withPosition(10));
-
-  // elMotor.set(ControlMode.PercentOutput,elPID.calculate());
+  elMotor.setControl(request.withPosition(1));
+  // elMotor.set(ControlMode.PercentOutput,elPID.calculate(0),0);
 
   }
   public void toL2(){
-    elMotor.set(1);
-    Timer.delay(3);
-    elMotor.set(0);
+    // elMotor.set(1);
+    // Timer.delay(3);
+    // elMotor.set(0);
+    elMotor.setControl(request.withPosition(2));
   }
   public void toL3(){
     elMotor.set(1);
