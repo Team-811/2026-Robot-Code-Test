@@ -11,10 +11,13 @@ import frc.robot.commands.elevatorCommand;
 import frc.robot.commands.toFloor;
 import frc.robot.commands.aDown;
 import frc.robot.commands.aUp;
+import frc.robot.commands.cDown;
+import frc.robot.commands.coralArmCommand;
 import frc.robot.commands.toL1;
 import frc.robot.commands.toL2;
 import frc.robot.commands.toL3;
 import frc.robot.commands.toL4;
+import frc.robot.commands.cUp;
 // import frc.robot.commands.toTargetHeight;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgieArm;
@@ -43,6 +46,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 
 import frc.robot.subsystems.aClaw;
+import frc.robot.subsystems.cArm;
 import frc.robot.subsystems.cClaw;
 
 /**
@@ -59,7 +63,7 @@ public class RobotContainer {
         private final limelight lime = new limelight();
         private final Elevator el = new Elevator();
        private final AlgieArm alArm = new AlgieArm();
-      
+      private final cArm coralArmm = new cArm();
             private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)* OperatorConstants.kSpeed; // kSpeedAt12Volts desired top speed
             private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
         
@@ -117,6 +121,8 @@ public class RobotContainer {
     );
     el.setDefaultCommand(new elevatorCommand(el));
     alArm.setDefaultCommand(new AlgieArmCommand(alArm));
+    corClaw.setDefaultCommand(new coralArmCommand(coralArmm));
+
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -145,7 +151,8 @@ public class RobotContainer {
     
         OpController.leftBumper().whileTrue(new aUp(alArm));
         OpController.rightBumper().whileTrue(new aDown(alArm));
-      
+      // OpController.leftBumper().whileTrue(new cUp(coralArmm)); // don't have enough button
+      // OpController.rightBumper().whileTrue(new cDown(coralArmm));//same 
 
     drivetrain.registerTelemetry(logger::telemeterize);  
   }

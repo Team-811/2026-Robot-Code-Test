@@ -34,5 +34,6 @@ public final class Constants {
     public static final int rDoubSolA1 = 5;
     public static final int fDoubSolA2 = 6;
     public static final int rDoubSolA2 = 7;
+    public static final int cArmId = 0;
   }
 }
