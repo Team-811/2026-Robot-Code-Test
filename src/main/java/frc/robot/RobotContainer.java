@@ -5,14 +5,17 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlgieArmCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.elevatorCommand;
+import frc.robot.commands.toFloor;
 import frc.robot.commands.aDown;
 import frc.robot.commands.aUp;
 import frc.robot.commands.toL1;
 import frc.robot.commands.toL2;
 import frc.robot.commands.toL3;
 import frc.robot.commands.toL4;
-import frc.robot.commands.toTargetHeight;
+// import frc.robot.commands.toTargetHeight;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgieArm;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -38,10 +41,10 @@ import static edu.wpi.first.units.Units.*;
 import frc.robot.subsystems.limelight;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
-// import frc.robot.commands.el;
-// import frc.robot.subsystems.aClaw;
-// import frc.robot.subsystems.cClaw;
-// import frc.robot.subsystems.elevator;
+
+import frc.robot.subsystems.aClaw;
+import frc.robot.subsystems.cClaw;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -51,11 +54,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
         private double speed = OperatorConstants.kSpeed;
-        // public static cClaw corClaw = new cClaw();
-    //    public static aClaw alClaw = new aClaw();
+        public static cClaw corClaw = new cClaw();
+       public static aClaw alClaw = new aClaw();
         private final limelight lime = new limelight();
         private final Elevator el = new Elevator();
-        private final AlgieArm alArm = new AlgieArm();
+       private final AlgieArm alArm = new AlgieArm();
       
             private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)* OperatorConstants.kSpeed; // kSpeedAt12Volts desired top speed
             private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -112,7 +115,8 @@ public class RobotContainer {
                 .withRotationalRate(-joyRightX()* MaxAngularRate) // Drive counterclockwise with negative X (left)
         )
     );
-
+    el.setDefaultCommand(new elevatorCommand(el));
+    alArm.setDefaultCommand(new AlgieArmCommand(alArm));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -127,17 +131,21 @@ public class RobotContainer {
     driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
     driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
     driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-    //  OpController.leftTrigger().whileTrue(new InstantCommand(()->corClaw.solenoidToggle()));//opens close
-    //     OpController.rightTrigger().whileTrue(new InstantCommand(()->corClaw.turn()));
     driverController.start().onTrue(drivetrain.runOnce(()-> drivetrain.seedFieldCentric()));
-        //    OpController.leftBumper().whileTrue(new InstantCommand(()->alClaw.closeClawA()));
+
+     OpController.leftTrigger().whileTrue(new InstantCommand(()->corClaw.solenoidToggle()));//opens close
+        OpController.rightTrigger().whileTrue(new InstantCommand(()->corClaw.turn()));
+           OpController.leftBumper().whileTrue(new InstantCommand(()->alClaw.closeClawA()));
+
+           OpController.rightBumper().whileTrue(new toFloor(el));
         OpController.a().whileTrue(new toL1(el));
         OpController.x().whileTrue(new toL2(el));
         OpController.y().whileTrue(new toL3(el));
         OpController.b().whileTrue(new toL4(el));
-        // OpController.a().whileTrue(new toTargetHeight(el));
+    
         OpController.leftBumper().whileTrue(new aUp(alArm));
         OpController.rightBumper().whileTrue(new aDown(alArm));
+      
 
     drivetrain.registerTelemetry(logger::telemeterize);  
   }

@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class toL2 extends Command {
-  /** Creates a new toL2. */
-    Elevator el;
-  public toL2(Elevator elevator) {
+public class toFloor extends Command {
+  /** Creates a new toFloor. */
+     Elevator el;
+  public toFloor(Elevator elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
     el = elevator;
     addRequirements(el);
@@ -20,14 +20,12 @@ public class toL2 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    el.setPoint(20);// a higher number than 0
+    el.setPoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

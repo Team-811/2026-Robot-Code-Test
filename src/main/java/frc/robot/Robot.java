@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    motor = new SparkMax(22, MotorType.kBrushless);
+    // motor = new SparkMax(22, MotorType.kBrushless);
     jerry = new TalonFX(24);
   }
 

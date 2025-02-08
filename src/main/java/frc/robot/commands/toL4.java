@@ -14,16 +14,19 @@ public class toL4 extends Command {
   public toL4(Elevator elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
     el = elevator;
+    addRequirements(el);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    el.setPoint(20);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    el.toL4();
+   
   }
 
   // Called once the command ends or is interrupted.
@@ -35,6 +38,6 @@ public class toL4 extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

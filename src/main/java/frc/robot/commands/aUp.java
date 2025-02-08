@@ -14,16 +14,19 @@ public class aUp extends Command {
   public aUp(AlgieArm uppieDownnie) {
     // Use addRequirements() here to declare subsystem dependencies.
     uppieDownniee = uppieDownnie;
+    addRequirements(uppieDownnie);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    uppieDownniee.setSetPoint(200);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    uppieDownniee.up();
+
   }
 
   // Called once the command ends or is interrupted.
@@ -35,6 +38,6 @@ public class aUp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

@@ -17,6 +17,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.OperatorConstants;
 
 public class AlgieArm extends SubsystemBase {
   /** Creates a new AlgieArm. */
@@ -24,8 +26,9 @@ public class AlgieArm extends SubsystemBase {
     private SparkMaxConfig motorConfig;
   private SparkClosedLoopController closedLoopController;
  private RelativeEncoder encoder;
+ private double setPoint;
   public AlgieArm() {
-    uppieDownnie = new SparkMax(22, MotorType.kBrushless);
+    uppieDownnie = new SparkMax(OperatorConstants.neoId, MotorType.kBrushless);
     closedLoopController = uppieDownnie.getClosedLoopController();
     encoder = uppieDownnie.getEncoder();
     motorConfig = new SparkMaxConfig();
@@ -37,25 +40,38 @@ public class AlgieArm extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(0.1)
+        .p(0.2)
         .i(0)
-        .d(0)
-        .outputRange(-1, 1)
-        // Set PID values for velocity control in slot 1
-        .p(0.0001, ClosedLoopSlot.kSlot1)
-        .i(0, ClosedLoopSlot.kSlot1)
-        .d(0, ClosedLoopSlot.kSlot1)
-        .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
-        .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
+        .d(0);
+        // .outputRange(-1, 1);
+        // // Set PID values for velocity control in slot 1
+        // .p(0.0001, ClosedLoopSlot.kSlot1)
+        // .i(0, ClosedLoopSlot.kSlot1)
+        // .d(0, ClosedLoopSlot.kSlot1)
+        // .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
+        // .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
          uppieDownnie.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
   }
-  public void up(double setPoint){
-    // uppieDownnie.setReference(setPoint, ControlType.kPosition,0);
-  }
-  public void down(){
-    
-  }
+//   public void up(double setPoint){
+//     closedLoopController.setReference(setPoint, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+//     System.out.println(uppieDownnie.getEncoder().getPosition());
+//   }
+//   public void down(double setPoint){
+//     closedLoopController.setReference(setPoint, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+//   }
+  public void turnPoint(){
+    // System.out.println(elMotor.getRotorPosition().getValue());
+    if(Math.abs(setPoint-uppieDownnie.getEncoder().getPosition())>1){
+      closedLoopController.setReference(setPoint, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    }
+    else{
+      uppieDownnie.set(0);
+    }
+    }
+    public void setSetPoint(double goal){
+        setPoint= goal;
+      }
   public void stopNeo(){
     uppieDownnie.set(0);
   }
