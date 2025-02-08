@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     // motor = new SparkMax(22, MotorType.kBrushless);
-    jerry = new TalonFX(24);
+    // jerry = new TalonFX(24);
   }
 
   /**

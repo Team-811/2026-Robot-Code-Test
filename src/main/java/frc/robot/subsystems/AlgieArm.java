@@ -53,13 +53,7 @@ public class AlgieArm extends SubsystemBase {
 
          uppieDownnie.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
   }
-//   public void up(double setPoint){
-//     closedLoopController.setReference(setPoint, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-//     System.out.println(uppieDownnie.getEncoder().getPosition());
-//   }
-//   public void down(double setPoint){
-//     closedLoopController.setReference(setPoint, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-//   }
+
   public void turnPoint(){
     // System.out.println(elMotor.getRotorPosition().getValue());
     if(Math.abs(setPoint-uppieDownnie.getEncoder().getPosition())>1){

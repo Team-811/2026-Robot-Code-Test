@@ -24,5 +24,15 @@ public final class Constants {
     public static final double slowSpeed = 0.3;
     public static final double kSlipCurrent = 120;
     public static final int Compressor = 0;
+    public static final int neoId = 22;
+    public static final int elKrakenId = 24;
+    public static final int fDoubSolC1 = 0;
+    public static final int rDoubSolC1 = 1;
+    public static final int fDoubsolC2 = 2;
+    public static final int rDoubSolC2 = 3;
+    public static final int fDoubSolA1 = 4;
+    public static final int rDoubSolA1 = 5;
+    public static final int fDoubSolA2 = 6;
+    public static final int rDoubSolA2 = 7;
   }
 }
