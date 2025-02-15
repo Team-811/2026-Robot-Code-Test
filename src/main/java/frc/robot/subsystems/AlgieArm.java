@@ -40,7 +40,7 @@ public class AlgieArm extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(0.2)
+        .p(0.05)
         .i(0)
         .d(0);
         // .outputRange(-1, 1);

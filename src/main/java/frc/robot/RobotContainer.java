@@ -18,7 +18,9 @@ import frc.robot.commands.toL2;
 import frc.robot.commands.toL3;
 import frc.robot.commands.toL4;
 import frc.robot.commands.cUp;
-// import frc.robot.commands.toTargetHeight;
+import frc.robot.commands.climberDescend;
+import frc.robot.commands.climberRise;
+
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AlgieArm;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -48,7 +50,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.aClaw;
 import frc.robot.subsystems.cArm;
 import frc.robot.subsystems.cClaw;
-
+import frc.robot.subsystems.climber;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -64,6 +66,7 @@ public class RobotContainer {
         private final Elevator el = new Elevator();
        private final AlgieArm alArm = new AlgieArm();
       private final cArm coralArmm = new cArm();
+      private final climber climb = new climber();
             private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)* OperatorConstants.kSpeed; // kSpeedAt12Volts desired top speed
             private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
         
@@ -75,8 +78,8 @@ public class RobotContainer {
             private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
         
             private final Telemetry logger = new Telemetry(MaxSpeed);
-              private SlewRateLimiter slewwyY = new SlewRateLimiter(1.5);
-          private SlewRateLimiter slewwyX = new SlewRateLimiter(1.5);
+              private SlewRateLimiter slewLimY = new SlewRateLimiter(1.5);
+          private SlewRateLimiter slewLimX = new SlewRateLimiter(1.5);
         
            
             private final CommandXboxController OpController = new CommandXboxController(OperatorConstants.kOpControllerPort);
@@ -114,25 +117,25 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() ->
-            drive.withVelocityX(joyLeftY()* MaxSpeed) // Drive forward with negative Y (forward)
-                .withVelocityY(-joyLeftX() * MaxSpeed) // Drive left with negative X (left)
+            drive.withVelocityX(slewLimX.calculate(joyLeftY())* MaxSpeed*speedScale()) // Drive forward with negative Y (forward)
+                .withVelocityY(-joyLeftX() * MaxSpeed*speedScale()) // Drive left with negative X (left)
                 .withRotationalRate(-joyRightX()* MaxAngularRate) // Drive counterclockwise with negative X (left)
         )
     );
     el.setDefaultCommand(new elevatorCommand(el));
     alArm.setDefaultCommand(new AlgieArmCommand(alArm));
-    corClaw.setDefaultCommand(new coralArmCommand(coralArmm));
+    coralArmm.setDefaultCommand(new coralArmCommand(coralArmm));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    driverController.b().whileTrue(drivetrain.applyRequest(() ->
-        point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
-    ));
+    driverController.leftBumper().whileTrue(drivetrain.applyRequest(() -> brake));
+    // driverController.b().whileTrue(drivetrain.applyRequest(() ->
+    //     point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
+    // ));
 
     
-    driverController.rightBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.fastSpeed));
-    driverController.leftBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.slowSpeed));
+    driverController.rightTrigger().whileTrue(new InstantCommand(()->speed= OperatorConstants.fastSpeed));
+    driverController.leftTrigger().whileTrue(new InstantCommand(()->speed= OperatorConstants.slowSpeed));
     driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
     driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
     driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
@@ -141,20 +144,25 @@ public class RobotContainer {
 
      OpController.leftTrigger().whileTrue(new InstantCommand(()->corClaw.solenoidToggle()));//opens close
         OpController.rightTrigger().whileTrue(new InstantCommand(()->corClaw.turn()));
-           OpController.leftBumper().whileTrue(new InstantCommand(()->alClaw.closeClawA()));
+        OpController.x().whileTrue(new InstantCommand(()->alClaw.closeClawA()));
+    driverController.rightBumper().whileTrue(new toFloor(el));
 
-           OpController.rightBumper().whileTrue(new toFloor(el));
-        OpController.a().whileTrue(new toL1(el));
-        OpController.x().whileTrue(new toL2(el));
-        OpController.y().whileTrue(new toL3(el));
-        OpController.b().whileTrue(new toL4(el));
-    
-        OpController.leftBumper().whileTrue(new aUp(alArm));
-        OpController.rightBumper().whileTrue(new aDown(alArm));
-      // OpController.leftBumper().whileTrue(new cUp(coralArmm)); // don't have enough button
-      // OpController.rightBumper().whileTrue(new cDown(coralArmm));//same 
+        driverController.a().whileTrue(new toL1(el));
+        driverController.x().whileTrue(new toL2(el));
+        driverController.y().whileTrue(new toL3(el));
+        driverController.b().whileTrue(new toL4(el));
+        driverController.leftBumper().whileTrue(new aUp(alArm));
+        driverController.rightBumper().whileTrue(new aDown(alArm));
 
+      OpController.leftBumper().whileTrue(new cUp(coralArmm)); // don't have enough button
+      OpController.rightBumper().whileTrue(new cDown(coralArmm));//same 
+      OpController.back().whileTrue(new climberRise(climb));
+      OpController.start().whileTrue(new climberDescend(climb));
+      OpController.a().whileTrue(new aUp(alArm));
+      OpController.y().whileTrue(new aDown(alArm));
+      
     drivetrain.registerTelemetry(logger::telemeterize);  
+
   }
   public double joyRightX(){
     double rightX = driverController.getRightX();
@@ -176,6 +184,14 @@ public double joyLeftY(){
         return leftY;
     }
     return 0;
+}
+public double speedScale(){
+  if(driverController.leftBumper().getAsBoolean())
+  return Constants.OperatorConstants.fastSpeed;
+  if(driverController.rightBumper().getAsBoolean())
+  return Constants.OperatorConstants.slowSpeed;
+  
+  return Constants.OperatorConstants.normalSpeed;
 }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

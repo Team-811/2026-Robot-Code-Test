@@ -20,7 +20,7 @@ public class aDown extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    uppieDownniee.setSetPoint(-10);
+    uppieDownniee.setSetPoint(25);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

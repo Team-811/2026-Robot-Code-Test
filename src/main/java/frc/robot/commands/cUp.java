@@ -20,7 +20,7 @@ public class cUp extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    colArm.setcArm(10);// not 0
+    colArm.setcArm(0.2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

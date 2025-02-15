@@ -13,13 +13,13 @@ import frc.robot.Constants.OperatorConstants;
 
 public class cClaw extends SubsystemBase {
   /** Creates a new claw. */
-  private final Compressor compressor = new Compressor(1, PneumaticsModuleType.CTREPCM);
+  private final Compressor compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
   // private final DoubleSolenoid dobSol1 = new DoubleSolenoid(Constants.OperatorConstants.CompressorID_C,PneumaticsModuleType.CTREPCM,Constants.OperatorConstants.SolenoidID_In_1C, Constants.OperatorConstants.SolenoidID_Out_1C);
   Boolean closeClaw = true; // could be reversed 
   // private final DoubleSolenoid dobSol2 = new DoubleSolenoid(Constants.OperatorConstants.CompressorID_C,PneumaticsModuleType.CTREPCM,Constants.OperatorConstants.SolenoidID_In_2C, Constants.OperatorConstants.SolenoidID_Out_2C);
   Boolean turnClaw = true;//change if reversed
-  private final DoubleSolenoid dobSol1 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, OperatorConstants.fDoubSolC1, OperatorConstants.rDoubSolC1);
-  private final DoubleSolenoid dobSol2 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, OperatorConstants.fDoubsolC2, OperatorConstants.rDoubSolC2);
+  private final DoubleSolenoid dobSol1 = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, OperatorConstants.fDoubSolC1, OperatorConstants.rDoubSolC1);
+  private final DoubleSolenoid dobSol2 = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, OperatorConstants.fDoubsolCT, OperatorConstants.rDoubSolCT);
   public cClaw() {
     compressor.enableDigital();
   }

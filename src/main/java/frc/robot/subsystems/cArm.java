@@ -18,27 +18,29 @@ public class cArm extends SubsystemBase {
   /** Creates a new cArm. */
   TalonFX coralArm;
   PIDController cArmPID ;
-  final PositionVoltage request;
+  final PositionVoltage demand;
   private double aim;
-  private Encoder cArmEncoder;
+  // private Encoder cArmEncoder;
   public cArm() {
     coralArm = new TalonFX(OperatorConstants.cArmId);
-    cArmEncoder = new Encoder(0,1);
+    // cArmEncoder = new Encoder(0,1);
 
     var slot0Configs = new Slot0Configs();
     // slot0Configs.kV = 0.12;
-      slot0Configs.kP = 2;
+      slot0Configs.kP = 0.1;
       slot0Configs.kI = 0;
       slot0Configs.kD = 0;
       coralArm.getConfigurator().apply(slot0Configs);
-       request = new PositionVoltage(0).withSlot(0);
+       demand = new PositionVoltage(0).withSlot(0);
  
+       
   
   }
-  public void turnPoint(){
-    // System.out.println(elMotor.getRotorPosition().getValue());
+  public void spin(){
+    // System.out.println(coralArm.getRotorPosition().getValue());
+    // System.out.println(Math.abs(aim-coralArm.getRotorPosition().getValueAsDouble()));
     if(Math.abs(aim-coralArm.getRotorPosition().getValueAsDouble())>1){
-      coralArm.setControl(request.withPosition(aim));
+      coralArm.setControl(demand.withPosition(aim));
     }
     else{
       coralArm.set(0);
@@ -46,8 +48,8 @@ public class cArm extends SubsystemBase {
     
 
   }
-  public void setcArm(double goal){
-    aim= goal;
+  public void setcArm(double thePoint){
+    aim= thePoint;
   }
 
   public void stopcArm(){

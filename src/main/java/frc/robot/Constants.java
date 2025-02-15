@@ -20,20 +20,21 @@ public final class Constants {
     public static final double kJoyLeftXDeadzone = 0.5;
     public static final double kJoyLeftYDeadzone = 0.5;
     public static final double kSpeed = 0.5;//number between 0-1 muliplies the max speed
-    public static final double fastSpeed = 1;
-    public static final double slowSpeed = 0.3;
     public static final double kSlipCurrent = 120;
-    public static final int Compressor = 0;
-    public static final int neoId = 22;
-    public static final int elKrakenId = 24;
-    public static final int fDoubSolC1 = 0;
-    public static final int rDoubSolC1 = 1;
-    public static final int fDoubsolC2 = 2;
-    public static final int rDoubSolC2 = 3;
-    public static final int fDoubSolA1 = 4;
-    public static final int rDoubSolA1 = 5;
-    public static final int fDoubSolA2 = 6;
-    public static final int rDoubSolA2 = 7;
-    public static final int cArmId = 0;
+    public static final int neoId = 18;
+    public static final int elKrakenId = 23;
+    public static final int fDoubSolC1 = 2;
+    public static final int rDoubSolC1 = 3;
+    public static final int fDoubsolCT = 6;
+    public static final int rDoubSolCT = 7;
+    public static final int fDoubSolA = 0;
+    public static final int rDoubSolA = 1;
+    public static final int cArmId = 24;
+    public static final int climbId = 32;
+
+    public static final double fastSpeed = 1;
+    public static final double slowSpeed = 0.1;
+    public static final double normalSpeed = 0.3;
+  
   }
 }

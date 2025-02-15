@@ -12,26 +12,25 @@ import frc.robot.Constants;
 import frc.robot.Constants.OperatorConstants;
 
 public class aClaw extends SubsystemBase {
- private final Compressor compressor = new Compressor(1, PneumaticsModuleType.CTREPCM);
-  private DoubleSolenoid dobSolLeft = new DoubleSolenoid(1,PneumaticsModuleType.CTREPCM,OperatorConstants.fDoubSolA1, OperatorConstants.rDoubSolA1);
-  private DoubleSolenoid dobSolRight = new DoubleSolenoid(1,PneumaticsModuleType.CTREPCM,OperatorConstants.fDoubSolA2, OperatorConstants.rDoubSolA2);
-  Boolean closeLeft= true;
-  Boolean closeRight= true;//same
+//  private final Compressor compressor = new Compressor(1, PneumaticsModuleType.CTREPCM);
+  private DoubleSolenoid aDobSol = new DoubleSolenoid(0,PneumaticsModuleType.CTREPCM,OperatorConstants.fDoubSolA, OperatorConstants.rDoubSolA);
+
+  Boolean close= true;
+ 
   /** Creates a new aClaw. */
   public aClaw() {
-    compressor.enableDigital();
+    // compressor.enableDigital();
   }
   public void closeClawA(){
-    if(closeLeft&&closeRight){
-      dobSolLeft.set(DoubleSolenoid.Value.kForward);
-      dobSolRight.set(DoubleSolenoid.Value.kForward);
+    if(close){
+      aDobSol.set(DoubleSolenoid.Value.kForward);
+
     }
     else{
-      dobSolLeft.set(DoubleSolenoid.Value.kReverse);
-      dobSolRight.set(DoubleSolenoid.Value.kReverse);
+      aDobSol.set(DoubleSolenoid.Value.kReverse);
+     
     }
-    closeLeft= !closeLeft;
-    closeRight= !closeRight;
+    close= !close;
 
   }
 
