@@ -28,6 +28,7 @@ import frc.robot.subsystems.Elevator;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -41,7 +42,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import static edu.wpi.first.units.Units.*;
 
-// import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import frc.robot.subsystems.limelight;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -100,6 +101,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    
   }
 
   /**
@@ -117,9 +119,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() ->
-            drive.withVelocityX(slewLimX.calculate(joyLeftY())* MaxSpeed*speedScale()) // Drive forward with negative Y (forward)
-                .withVelocityY(-joyLeftX() * MaxSpeed*speedScale()) // Drive left with negative X (left)
-                .withRotationalRate(-joyRightX()* MaxAngularRate) // Drive counterclockwise with negative X (left)
+            drive.withVelocityX(slewLimY.calculate(joyLeftY())* MaxSpeed*speedScale()) // Drive forward with negative Y (forward)
+                .withVelocityY(slewLimX.calculate(-joyLeftX()) * MaxSpeed*speedScale()) // Drive left with negative X (left)
+                .withRotationalRate(-joyRightX()* MaxAngularRate*0.17) // Drive counterclockwise with negative X (left)
         )
     );
     el.setDefaultCommand(new elevatorCommand(el));
@@ -128,14 +130,14 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    driverController.leftBumper().whileTrue(drivetrain.applyRequest(() -> brake));
+    driverController.leftTrigger().whileTrue(drivetrain.applyRequest(() -> brake));
     // driverController.b().whileTrue(drivetrain.applyRequest(() ->
     //     point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
     // ));
 
     
-    driverController.rightTrigger().whileTrue(new InstantCommand(()->speed= OperatorConstants.fastSpeed));
-    driverController.leftTrigger().whileTrue(new InstantCommand(()->speed= OperatorConstants.slowSpeed));
+    driverController.rightBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.fastSpeed));
+    driverController.leftBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.slowSpeed));
     driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
     driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
     driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
@@ -145,14 +147,17 @@ public class RobotContainer {
      OpController.leftTrigger().whileTrue(new InstantCommand(()->corClaw.solenoidToggle()));//opens close
         OpController.rightTrigger().whileTrue(new InstantCommand(()->corClaw.turn()));
         OpController.x().whileTrue(new InstantCommand(()->alClaw.closeClawA()));
-    driverController.rightBumper().whileTrue(new toFloor(el));
+
+    driverController.rightTrigger().whileTrue(new toFloor(el));
 
         driverController.a().whileTrue(new toL1(el));
         driverController.x().whileTrue(new toL2(el));
         driverController.y().whileTrue(new toL3(el));
         driverController.b().whileTrue(new toL4(el));
-        driverController.leftBumper().whileTrue(new aUp(alArm));
-        driverController.rightBumper().whileTrue(new aDown(alArm));
+
+
+        
+
 
       OpController.leftBumper().whileTrue(new cUp(coralArmm)); // don't have enough button
       OpController.rightBumper().whileTrue(new cDown(coralArmm));//same 
@@ -160,7 +165,7 @@ public class RobotContainer {
       OpController.start().whileTrue(new climberDescend(climb));
       OpController.a().whileTrue(new aUp(alArm));
       OpController.y().whileTrue(new aDown(alArm));
-      
+
     drivetrain.registerTelemetry(logger::telemeterize);  
 
   }
@@ -200,6 +205,6 @@ public double speedScale(){
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return new PathPlannerAuto("Ex Auto");
   }
 }

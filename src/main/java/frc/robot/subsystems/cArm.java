@@ -27,13 +27,13 @@ public class cArm extends SubsystemBase {
 
     var slot0Configs = new Slot0Configs();
     // slot0Configs.kV = 0.12;
-      slot0Configs.kP = 0.1;
+      slot0Configs.kP = 0.3;
       slot0Configs.kI = 0;
       slot0Configs.kD = 0;
       coralArm.getConfigurator().apply(slot0Configs);
        demand = new PositionVoltage(0).withSlot(0);
  
-       
+
   
   }
   public void spin(){

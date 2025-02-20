@@ -20,7 +20,7 @@ public class toL1 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    el.setPoint(100);
+    el.setPoint(20);
     
   }
 
