@@ -25,10 +25,11 @@ public class Elevator extends SubsystemBase {
     encoder = new Encoder(0,1);
 
        var slot0Configs = new Slot0Configs();
-    // slot0Configs.kV = 0.12;
-   slot0Configs.kP = 0.7;
+    slot0Configs.kV = 15;
+   slot0Configs.kP = 0;
    slot0Configs.kI = 0;
-   slot0Configs.kD = 0.5;
+   slot0Configs.kD = 0;
+   slot0Configs.kG = 0.34;
    elMotor.getConfigurator().apply(slot0Configs);
     request = new PositionVoltage(0).withSlot(0);
 
