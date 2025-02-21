@@ -81,6 +81,7 @@ public class RobotContainer {
             private final Telemetry logger = new Telemetry(MaxSpeed);
               private SlewRateLimiter slewLimY = new SlewRateLimiter(1.5);
           private SlewRateLimiter slewLimX = new SlewRateLimiter(1.5);
+          private SlewRateLimiter slewLimRote = new SlewRateLimiter(1.5);
         
            
             private final CommandXboxController OpController = new CommandXboxController(OperatorConstants.kOpControllerPort);
@@ -121,7 +122,7 @@ public class RobotContainer {
         drivetrain.applyRequest(() ->
             drive.withVelocityX(slewLimY.calculate(joyLeftY())* MaxSpeed*speedScale()) // Drive forward with negative Y (forward)
                 .withVelocityY(slewLimX.calculate(-joyLeftX()) * MaxSpeed*speedScale()) // Drive left with negative X (left)
-                .withRotationalRate(-joyRightX()* MaxAngularRate*0.17) // Drive counterclockwise with negative X (left)
+                .withRotationalRate(slewLimRote.calculate(-joyRightX())* MaxAngularRate*0.17) // Drive counterclockwise with negative X (left)
         )
     );
     el.setDefaultCommand(new elevatorCommand(el));
