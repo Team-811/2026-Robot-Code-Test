@@ -5,14 +5,14 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AlgieArmCommand;
+// import frc.robot.commands.AlgieArmCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.elevatorCommand;
 import frc.robot.commands.reverseIntakeCommand;
 import frc.robot.commands.toFloor;
-import frc.robot.commands.aDown;
-import frc.robot.commands.aUp;
+// import frc.robot.commands.aDown;
+// import frc.robot.commands.aUp;
 import frc.robot.commands.cDown;
 import frc.robot.commands.cL1x1;
 import frc.robot.commands.cL4x1;
@@ -30,7 +30,7 @@ import frc.robot.commands.climberDescend;
 import frc.robot.commands.climberRise;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AlgieArm;
+// import frc.robot.subsystems.AlgieArm;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 
@@ -79,7 +79,7 @@ public class RobotContainer {
        public static aClaw alClaw = new aClaw();
         private final limelight lime = new limelight();
         private final Elevator el = new Elevator();
-       private final AlgieArm alArm = new AlgieArm();
+      //  private final AlgieArm alArm = new AlgieArm();
       private final cArm coralArmm = new cArm();
       private final climber climb = new climber();
       private final rollerClaw rolly= new rollerClaw();
@@ -154,7 +154,7 @@ public class RobotContainer {
         )
     );
     el.setDefaultCommand(new elevatorCommand(el));
-    alArm.setDefaultCommand(new AlgieArmCommand(alArm));
+    // alArm.setDefaultCommand(new AlgieArmCommand(alArm));
     coralArmm.setDefaultCommand(new coralArmCommand(coralArmm));
 
     driverController.rightTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
@@ -169,7 +169,7 @@ public class RobotContainer {
     // driverController.b().whileTrue(drivetrain.applyRequest(() ->
     //     point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
     // ));
-    OpController.back().onChange(new InstantCommand(()->System.out.println(drivetrain.getPigeon2().getYaw()), drivetrain));
+    OpController.back().onChange(new InstantCommand(()->System.out.println(drivetrain.getPigeon2()), drivetrain));
     
     driverController.rightBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.fastSpeed));
     driverController.leftBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.slowSpeed));
@@ -202,8 +202,8 @@ public class RobotContainer {
 
       OpController.back().whileTrue(new climberRise(climb));
       OpController.start().whileTrue(new climberDescend(climb));
-      OpController.a().whileTrue(new aUp(alArm));
-      OpController.y().whileTrue(new aDown(alArm));
+      // OpController.a().whileTrue(new aUp(alArm));
+      // OpController.y().whileTrue(new aDown(alArm));
       OpController.start().whileTrue(new cSpinTogether(rolly));
 
     drivetrain.registerTelemetry(logger::telemeterize);  
