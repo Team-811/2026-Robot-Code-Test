@@ -5,39 +5,35 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.AlgieArm;
+import frc.robot.subsystems.rollerClaw;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class aUp extends Command {
-  /** Creates a new aUp. */
-  AlgieArm uppieDownniee;
-  public aUp(AlgieArm uppieDownnie) {
+public class cSpinTogether extends Command {
+  /** Creates a new cSpinTogether. */
+  rollerClaw rolly;
+  public cSpinTogether(rollerClaw roll) {
     // Use addRequirements() here to declare subsystem dependencies.
-    uppieDownniee = uppieDownnie;
-    addRequirements(uppieDownnie);
+    rolly= roll;
+    addRequirements(rolly);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    uppieDownniee.setSetPoint(-7);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    rolly.spintogether();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    uppieDownniee.stopNeo();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

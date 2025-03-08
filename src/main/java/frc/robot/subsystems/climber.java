@@ -21,7 +21,9 @@ public class climber extends SubsystemBase {
   public void descend(){
     climbb.set(-10);
   }
-
+  public void stopClimb(){
+    climbb.set(0);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "toSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "fromSource"
           }
         }
       ]

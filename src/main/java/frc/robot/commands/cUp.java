@@ -12,6 +12,7 @@ public class cUp extends Command {
   /** Creates a new cUp. */
   cArm colArm;
   public cUp(cArm coralArm) {
+
     // Use addRequirements() here to declare subsystem dependencies.
       colArm = coralArm;
       addRequirements(colArm);
@@ -20,7 +21,7 @@ public class cUp extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    colArm.setcArm(0);
+    colArm.setcArm(7);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -24,13 +24,14 @@ public class Elevator extends SubsystemBase {
     elMotor = new TalonFX(OperatorConstants.elKrakenId);
     encoder = new Encoder(0,1);
 
+    elMotor.setPosition(0);
        var slot0Configs = new Slot0Configs();
-    slot0Configs.kV = 1.5;
+    slot0Configs.kV = 0;
     slot0Configs.kA = 0;
-   slot0Configs.kP = 0.1;
+   slot0Configs.kP = 0.3;
    slot0Configs.kI = 0;
-   slot0Configs.kD = -0.05;
-   slot0Configs.kG = 0.34;
+   slot0Configs.kD = 0.05;
+   slot0Configs.kG =0;
    elMotor.getConfigurator().apply(slot0Configs);
     request = new PositionVoltage(0).withSlot(0);
 
@@ -39,7 +40,7 @@ public class Elevator extends SubsystemBase {
 
   public void turnPoint(){
     // System.out.println(elMotor.getRotorPosition().getValue());
-    if(Math.abs(target-elMotor.getRotorPosition().getValueAsDouble())>1){
+    if(Math.abs(target-elMotor.getRotorPosition().getValueAsDouble())>OperatorConstants.kElDeadBand){
       elMotor.setControl(request.withPosition(target));
     }
     else{
@@ -48,8 +49,11 @@ public class Elevator extends SubsystemBase {
     
 
   }
-  public void setPoint(double goal){
+  public boolean setPoint(double goal){
     target= goal;
+    System.out.println("hello");
+    
+    return Math.abs(target-elMotor.getRotorPosition().getValueAsDouble())<OperatorConstants.kElDeadBand;
   }
 
   public void stopElevator(){

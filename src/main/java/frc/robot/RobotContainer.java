@@ -7,11 +7,19 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgieArmCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.elevatorCommand;
+import frc.robot.commands.reverseIntakeCommand;
 import frc.robot.commands.toFloor;
 import frc.robot.commands.aDown;
 import frc.robot.commands.aUp;
 import frc.robot.commands.cDown;
+import frc.robot.commands.cL1x1;
+import frc.robot.commands.cL4x1;
+import frc.robot.commands.cL4x2;
+import frc.robot.commands.cL4x3;
+import frc.robot.commands.cMid;
+import frc.robot.commands.cSpinTogether;
 import frc.robot.commands.coralArmCommand;
 import frc.robot.commands.toL1;
 import frc.robot.commands.toL2;
@@ -27,6 +35,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -39,18 +48,23 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static edu.wpi.first.units.Units.*;
+
+import java.nio.file.Path;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import frc.robot.subsystems.limelight;
+import frc.robot.subsystems.rollerClaw;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 
 import frc.robot.subsystems.aClaw;
 import frc.robot.subsystems.cArm;
-import frc.robot.subsystems.cClaw;
+// import frc.robot.subsystems.cClaw;
 import frc.robot.subsystems.climber;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -61,13 +75,14 @@ import frc.robot.subsystems.climber;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
         private double speed = OperatorConstants.kSpeed;
-        public static cClaw corClaw = new cClaw();
+        // public static cClaw corClaw = new cClaw();
        public static aClaw alClaw = new aClaw();
         private final limelight lime = new limelight();
         private final Elevator el = new Elevator();
        private final AlgieArm alArm = new AlgieArm();
       private final cArm coralArmm = new cArm();
       private final climber climb = new climber();
+      private final rollerClaw rolly= new rollerClaw();
             private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)* OperatorConstants.kSpeed; // kSpeedAt12Volts desired top speed
             private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
         
@@ -83,7 +98,9 @@ public class RobotContainer {
           private SlewRateLimiter slewLimX = new SlewRateLimiter(1.5);
           private SlewRateLimiter slewLimRote = new SlewRateLimiter(1.5);
         
-           
+          private final RobotCentric robotCentric = new SwerveRequest.RobotCentric()
+            .withDeadband(MaxSpeed*0.05).withRotationalDeadband(MaxAngularRate*0.1)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
             private final CommandXboxController OpController = new CommandXboxController(OperatorConstants.kOpControllerPort);
             public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
           
@@ -98,10 +115,21 @@ public class RobotContainer {
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+      private final SendableChooser <String> autoChooser;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    // autoChooser = AutoBuilder.buildAutoChooser("midL4x1");
+    autoChooser= new SendableChooser<String>();
+    autoChooser.addOption("midL4x1", "midL4x1");
+    autoChooser.addOption("midL1x1", "midL1x1");
+    autoChooser.addOption("midL4x2", "midL4x2");
+    autoChooser.addOption("midL4x3", "midL4x3");
+    autoChooser.addOption("Ex Auto", "Ex Auto");
+
+    SmartDashboard.putData("autoChooser",autoChooser);
     
   }
 
@@ -122,12 +150,18 @@ public class RobotContainer {
         drivetrain.applyRequest(() ->
             drive.withVelocityX(slewLimY.calculate(joyLeftY())* MaxSpeed*speedScale()) // Drive forward with negative Y (forward)
                 .withVelocityY(slewLimX.calculate(-joyLeftX()) * MaxSpeed*speedScale()) // Drive left with negative X (left)
-                .withRotationalRate(slewLimRote.calculate(-joyRightX())* MaxAngularRate*0.17) // Drive counterclockwise with negative X (left)
+                .withRotationalRate(slewLimRote.calculate(-joyRightX())* MaxAngularRate) // Drive counterclockwise with negative X (left)
         )
     );
     el.setDefaultCommand(new elevatorCommand(el));
     alArm.setDefaultCommand(new AlgieArmCommand(alArm));
     coralArmm.setDefaultCommand(new coralArmCommand(coralArmm));
+
+    driverController.rightTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
+      .withVelocityX(slewLimY.calculate(joyLeftY())*MaxSpeed*speedScale())
+      .withVelocityY(slewLimX.calculate(-joyLeftX())*MaxSpeed*speedScale())
+      .withRotationalRate(slewLimRote.calculate(-joyRightX())* MaxAngularRate)
+      ).ignoringDisable(true));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -135,21 +169,21 @@ public class RobotContainer {
     // driverController.b().whileTrue(drivetrain.applyRequest(() ->
     //     point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
     // ));
-
+    OpController.back().onChange(new InstantCommand(()->System.out.println(drivetrain.getPigeon2().getYaw()), drivetrain));
     
     driverController.rightBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.fastSpeed));
     driverController.leftBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.slowSpeed));
-    driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    // driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+    // driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
     driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
     driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
     driverController.start().onTrue(drivetrain.runOnce(()-> drivetrain.seedFieldCentric()));
 
-     OpController.leftTrigger().whileTrue(new InstantCommand(()->corClaw.solenoidToggle()));//opens close
-        OpController.rightTrigger().whileTrue(new InstantCommand(()->corClaw.turn()));
+    //  OpController.leftTrigger().whileTrue(new InstantCommand(()->corClaw.solenoidToggle()));//opens close
+    //     OpController.rightTrigger().whileTrue(new InstantCommand(()->corClaw.turn()));
         OpController.x().whileTrue(new InstantCommand(()->alClaw.closeClawA()));
 
-    driverController.rightTrigger().whileTrue(new toFloor(el));
+    driverController.back().whileTrue(new toFloor(el));
 
         driverController.a().whileTrue(new toL1(el));
         driverController.x().whileTrue(new toL2(el));
@@ -157,15 +191,20 @@ public class RobotContainer {
         driverController.b().whileTrue(new toL4(el));
 
 
-        
+      
+      OpController.leftTrigger().whileTrue(new IntakeCommand(rolly));
+      OpController.rightTrigger().whileTrue(new reverseIntakeCommand(rolly));
 
 
       OpController.leftBumper().whileTrue(new cUp(coralArmm)); // don't have enough button
       OpController.rightBumper().whileTrue(new cDown(coralArmm));//same 
+      OpController.b().whileTrue(new cMid(coralArmm));
+
       OpController.back().whileTrue(new climberRise(climb));
       OpController.start().whileTrue(new climberDescend(climb));
       OpController.a().whileTrue(new aUp(alArm));
       OpController.y().whileTrue(new aDown(alArm));
+      OpController.start().whileTrue(new cSpinTogether(rolly));
 
     drivetrain.registerTelemetry(logger::telemeterize);  
 
@@ -206,6 +245,29 @@ public double speedScale(){
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new PathPlannerAuto("Ex Auto");
+    // return new PathPlannerAuto("Ex Auto");
+    String Choice = autoChooser.getSelected();
+    Command auto;
+    switch (Choice) {
+      case "midL4x1":
+        auto=new cL4x1(el, drivetrain, rolly, Choice, coralArmm);
+        break;
+      case "midL1x1":
+        auto = new cL1x1(el, drivetrain, rolly, Choice);
+        break;
+      case "midL4x2":
+      auto = new cL4x2(el, drivetrain, rolly, Choice, coralArmm);
+      break;
+      case "midL4x3":
+      auto = new cL4x3(el, drivetrain, rolly, Choice, coralArmm);
+      break;
+
+    case "taxi":
+      default: 
+      auto= new PathPlannerAuto("Ex Auto");
+        break;
+    }
+    return auto;
+
   }
 }

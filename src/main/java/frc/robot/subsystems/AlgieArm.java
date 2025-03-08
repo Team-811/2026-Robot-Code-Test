@@ -29,6 +29,7 @@ public class AlgieArm extends SubsystemBase {
  private double setPoint;
   public AlgieArm() {
     uppieDownnie = new SparkMax(OperatorConstants.neoId, MotorType.kBrushless);
+
     closedLoopController = uppieDownnie.getClosedLoopController();
     encoder = uppieDownnie.getEncoder();
     motorConfig = new SparkMaxConfig();

@@ -23,13 +23,14 @@ public class cArm extends SubsystemBase {
   // private Encoder cArmEncoder;
   public cArm() {
     coralArm = new TalonFX(OperatorConstants.cArmId);
-    // cArmEncoder = new Encoder(0,1);
-
+    // cArmEncoder = new Encoder(st0,1);
+    coralArm.setPosition(0);
     var slot0Configs = new Slot0Configs();
     // slot0Configs.kV = 0.12;
-      slot0Configs.kP = 0.3;
+      slot0Configs.kP = 0.1;
       slot0Configs.kI = 0;
       slot0Configs.kD = 0;
+      // slot0Configs.kG= 0.5;
       coralArm.getConfigurator().apply(slot0Configs);
        demand = new PositionVoltage(0).withSlot(0);
  

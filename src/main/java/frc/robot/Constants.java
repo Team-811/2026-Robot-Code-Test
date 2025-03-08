@@ -19,7 +19,7 @@ public final class Constants {
     public static final double kJoyRightXDeadzone = 0.5;
     public static final double kJoyLeftXDeadzone = 0.5;
     public static final double kJoyLeftYDeadzone = 0.5;
-    public static final double kSpeed = 0.5;//number between 0-1 muliplies the max speed
+    public static final double kSpeed = 0.8;//number between 0-1 muliplies the max speed
     public static final double kSlipCurrent = 120;
     public static final int neoId = 18;
     public static final int elKrakenId = 23;
@@ -32,9 +32,10 @@ public final class Constants {
     public static final int cArmId = 24;
     public static final int climbId = 32;
 
-    public static final double fastSpeed = 1;
-    public static final double slowSpeed = 0.2;
-    public static final double normalSpeed = 0.5;
+    public static final double fastSpeed =1 ;
+    public static final double slowSpeed = 0.5;
+    public static final double normalSpeed = 0.9;
+    public static final double kElDeadBand = 3;
   
   }
 }

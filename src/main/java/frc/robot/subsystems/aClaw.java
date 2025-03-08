@@ -12,14 +12,16 @@ import frc.robot.Constants;
 import frc.robot.Constants.OperatorConstants;
 
 public class aClaw extends SubsystemBase {
-//  private final Compressor compressor = new Compressor(1, PneumaticsModuleType.CTREPCM);
-  private DoubleSolenoid aDobSol = new DoubleSolenoid(0,PneumaticsModuleType.CTREPCM,OperatorConstants.fDoubSolA, OperatorConstants.rDoubSolA);
+private final Compressor compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+  // private DoubleSolenoid aDobSol = new DoubleSolenoid(0,PneumaticsModuleType.CTREPCM,OperatorConstants.fDoubSolA, OperatorConstants.rDoubSolA);
+  private DoubleSolenoid aDobSol = new DoubleSolenoid(0,PneumaticsModuleType.CTREPCM,2, 3);
 
-  Boolean close= true;
+  Boolean close= true
+  ;
  
   /** Creates a new aClaw. */
   public aClaw() {
-    // compressor.enableDigital();
+    compressor.enableDigital();
   }
   public void closeClawA(){
     if(close){
@@ -33,7 +35,7 @@ public class aClaw extends SubsystemBase {
     close= !close;
 
   }
-
+ 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

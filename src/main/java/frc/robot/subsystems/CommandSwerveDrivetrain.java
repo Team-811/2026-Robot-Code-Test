@@ -192,11 +192,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        System.out.println("e");
         configureAutoBuilder();
+        System.out.println("q");
     }
 
     private void configureAutoBuilder() {
+        System.out.println("w");
         try {
+            System.out.println("hello");
             var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
                 () -> getState().Pose,   // Supplier of current robot pose
@@ -219,9 +223,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
                 this // Subsystem for requirements
             );
+            System.out.println("hi");
         } catch (Exception ex) {
+            System.out.println("x");
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
+            System.out.println("y");
         }
+    }
+
+    private Rotation2d getGyroAngle(double yaw) {
+        return getState().RawHeading;
     }
 
     /**
