@@ -10,6 +10,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.elevatorCommand;
 import frc.robot.commands.reverseIntakeCommand;
+import frc.robot.commands.slowRolly;
 import frc.robot.commands.toFloor;
 // import frc.robot.commands.aDown;
 // import frc.robot.commands.aUp;
@@ -181,7 +182,7 @@ public class RobotContainer {
 
     //  OpController.leftTrigger().whileTrue(new InstantCommand(()->corClaw.solenoidToggle()));//opens close
     //     OpController.rightTrigger().whileTrue(new InstantCommand(()->corClaw.turn()));
-        OpController.x().whileTrue(new InstantCommand(()->alClaw.closeClawA()));
+        // OpController.x().whileTrue(new InstantCommand(()->alClaw.closeClawA()));
 
     driverController.back().whileTrue(new toFloor(el));
 
@@ -196,16 +197,18 @@ public class RobotContainer {
       OpController.rightTrigger().whileTrue(new reverseIntakeCommand(rolly));
 
 
-      OpController.leftBumper().whileTrue(new cUp(coralArmm)); // don't have enough button
-      OpController.rightBumper().whileTrue(new cDown(coralArmm));//same 
-      OpController.b().whileTrue(new cMid(coralArmm));
+      OpController.leftBumper().whileTrue(new cUp(coralArmm)); 
+      OpController.rightBumper().whileTrue(new cDown(coralArmm));
 
-      OpController.back().whileTrue(new climberRise(climb));
-      OpController.start().whileTrue(new climberDescend(climb));
+      OpController.b().whileTrue(new cMid(coralArmm));
+      OpController.y().whileTrue(new climberDescend(climb));
+      OpController.a().whileTrue(new climberRise(climb));
+      OpController.x().whileTrue(new slowRolly(rolly));
+    
       // OpController.a().whileTrue(new aUp(alArm));
       // OpController.y().whileTrue(new aDown(alArm));
       OpController.start().whileTrue(new cSpinTogether(rolly));
-
+      
     drivetrain.registerTelemetry(logger::telemeterize);  
 
   }
@@ -253,12 +256,12 @@ public double speedScale(){
         auto=new cL4x1(el, drivetrain, rolly, Choice, coralArmm);
         break;
       case "midL1x1":
-        auto = new cL1x1(el, drivetrain, rolly, Choice);
+        auto = new cL1x1(el, drivetrain, rolly, Choice, coralArmm);
         break;
-      case "midL4x2":
+      case "sideL4x1":
       auto = new cL4x2(el, drivetrain, rolly, Choice, coralArmm);
       break;
-      case "midL4x3":
+      case "sideL1x1":
       auto = new cL4x3(el, drivetrain, rolly, Choice, coralArmm);
       break;
 

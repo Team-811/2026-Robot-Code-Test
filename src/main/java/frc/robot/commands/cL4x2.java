@@ -7,6 +7,7 @@ package frc.robot.commands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.cArm;
@@ -17,9 +18,9 @@ import frc.robot.subsystems.rollerClaw;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class cL4x2 extends ParallelCommandGroup {
   /** Creates a new cL4x2. */
-  public cL4x2(Elevator el, CommandSwerveDrivetrain drivetrain, rollerClaw rolly, String path,cArm coralArm) {
+  public cL4x2(Elevator el, CommandSwerveDrivetrain drivetrain, rollerClaw rolly, String path,cArm coArm) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new cL4x1(el, drivetrain, rolly, path, coralArm), new PathPlannerAuto("midL4x2"), new toL4(el).andThen(new IntakeCommand(rolly)));//compelte this later
+       addCommands(new PathPlannerAuto("sideL1x1"), new ParallelDeadlineGroup(new toL4(el), new cUpAuto(coArm)).andThen(new reverseIntakeCommand(rolly)));
   }
 }

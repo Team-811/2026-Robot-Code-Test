@@ -13,7 +13,7 @@ public class climber extends SubsystemBase {
   /** Creates a new climber. */
  TalonFX climbb;
   public climber() {
-    climbb = new TalonFX(OperatorConstants.climbId);
+    climbb = new TalonFX(25);
   }
   public void rise(){
     climbb.set(10);

@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.rollerClaw;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class cSpinTogether extends Command {
-  /** Creates a new cSpinTogether. */
-  rollerClaw rolly;
-  public cSpinTogether(rollerClaw roll) {
+public class slowRolly extends Command {
+  /** Creates a new slowRolly. */
+   rollerClaw rolly;
+  public slowRolly(rollerClaw roll) {
     // Use addRequirements() here to declare subsystem dependencies.
     rolly= roll;
     addRequirements(rolly);
@@ -24,7 +24,7 @@ public class cSpinTogether extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    rolly.spintogether();
+    rolly.L1Rolly();
   }
 
   // Called once the command ends or is interrupted.
