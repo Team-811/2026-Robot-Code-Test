@@ -55,8 +55,8 @@ public class rollerClaw extends SubsystemBase {
       //    rolly2.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
   }
   public void spinIn(){
-    rolly1.set(0.15);
-    rolly2.set(-0.15);
+    rolly1.set(-0.15);
+    rolly2.set(0.15);
     // if(limSwitch.get()){
     //   rolly1.set(10);
     //   rolly2.set(-10);
@@ -67,20 +67,20 @@ public class rollerClaw extends SubsystemBase {
     // }
   }
   public void spinOut(){
-    rolly1.set(-0.32);
-    rolly2.set(0.32);
+    rolly1.set(0.32);
+    rolly2.set(-0.32);
   }
   public void stopSpin(){
     rolly1.set(0);
     rolly2.set(0);
   }
   public void spintogether(){
-    rolly1.set(0.31);
-    rolly2.set(0.31);
+    rolly1.set(-0.31);
+    rolly2.set(-0.31);
   }
   public void L1Rolly(){
-    rolly1.set(-0.1);
-    rolly2.set(0.1);
+    rolly1.set(0.1);
+    rolly2.set(-0.1);
   }
 
 

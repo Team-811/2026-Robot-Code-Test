@@ -4,6 +4,7 @@
 // ill do this later
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
@@ -12,14 +13,24 @@ import com.ctre.phoenix6.hardware.TalonFX;
 public class climber extends SubsystemBase {
   /** Creates a new climber. */
  TalonFX climbb;
+ DigitalInput limSwitch;
   public climber() {
     climbb = new TalonFX(25);
+     
   }
   public void rise(){
     climbb.set(10);
   }
   public void descend(){
-    climbb.set(-10);
+     if(limSwitch.get()){
+      climbb.set(-10);
+    
+    }
+    else{
+      climbb.set(0);
+     
+    }
+    // climbb.set(-10);
   }
   public void stopClimb(){
     climbb.set(0);
