@@ -39,7 +39,7 @@ public class toL4 extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return el.setPoint(230);
+    return el.setPoint(237);
     // return true;
   }
 }

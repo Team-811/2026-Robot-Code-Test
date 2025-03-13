@@ -35,6 +35,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.FieldCentric;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
@@ -49,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -63,7 +65,7 @@ import frc.robot.subsystems.rollerClaw;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 
-import frc.robot.subsystems.aClaw;
+// import frc.robot.subsystems.aClaw;
 import frc.robot.subsystems.cArm;
 // import frc.robot.subsystems.cClaw;
 import frc.robot.subsystems.climber;
@@ -77,7 +79,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
         private double speed = OperatorConstants.kSpeed;
         // public static cClaw corClaw = new cClaw();
-       public static aClaw alClaw = new aClaw();
+      //  public static aClaw alClaw = new aClaw();
         private final limelight lime = new limelight();
         private final Elevator el = new Elevator();
       //  private final AlgieArm alArm = new AlgieArm();
@@ -163,6 +165,8 @@ public class RobotContainer {
       .withVelocityY(slewLimX.calculate(-joyLeftX())*MaxSpeed*speedScale())
       .withRotationalRate(slewLimRote.calculate(-joyRightX())* MaxAngularRate)
       ).ignoringDisable(true));
+
+
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

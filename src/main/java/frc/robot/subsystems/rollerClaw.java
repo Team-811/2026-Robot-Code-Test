@@ -24,7 +24,7 @@ public class rollerClaw extends SubsystemBase {
    private SparkMax rolly2;
    private RelativeEncoder cEncoder;
    private SparkMaxConfig motorConfig;
-   DigitalInput limSwitch;
+  //  DigitalInput limSwitch;
  
 
   public rollerClaw() {

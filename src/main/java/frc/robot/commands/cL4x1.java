@@ -25,6 +25,6 @@ public class cL4x1 extends SequentialCommandGroup {
     // addCommands(new PathPlannerAuto(path), new toL4(el).andThen(new InstantCommand(()->claw.solenoidToggle())));
     // addCommands(new PathPlannerAuto("midL4x1"), new toL4(el).alongWith(new cUp(coArm)).andThen(new reverseIntakeCommand(rolly)));
     // addCommands(new PathPlannerAuto("midL4x1"), new toL4(el).alongWith(new cUp(coArm)).andThen(new reverseIntakeCommand(rolly)));    
-    addCommands(new PathPlannerAuto("midL4x1"), new ParallelDeadlineGroup(new toL4(el), new cUpAuto(coArm)).andThen(new reverseIntakeCommand(rolly)));
+    addCommands(new PathPlannerAuto("midL4x1"), new ParallelDeadlineGroup(new toL4(el), new cUpAuto(coArm)).andThen(new slowRolly(rolly)));
   }
 }

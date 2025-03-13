@@ -22,7 +22,7 @@ public class Elevator extends SubsystemBase {
 
   public Elevator() {
     elMotor = new TalonFX(OperatorConstants.elKrakenId);
-    encoder = new Encoder(0,1);
+    // encoder = new Encoder(0,1);
 
     elMotor.setPosition(0);
        var slot0Configs = new Slot0Configs();
