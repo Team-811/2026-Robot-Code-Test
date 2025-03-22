@@ -37,8 +37,10 @@ public class limelight extends SubsystemBase {
   // static PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
   /** Called once at the beginning of the robot program. */
   NetworkTable table;
-  private double x;
+  // private double x;
   private double v;
+  double[] targetPose;
+  private long targetId;
   public limelight() {
     // var visionThread = new Thread(this::apriltagVisionThreadProc);
     // visionThread.setDaemon(true);
@@ -48,11 +50,15 @@ public class limelight extends SubsystemBase {
   }
 public void periodic(){
  table = NetworkTableInstance.getDefault().getTable("limelight");
-  NetworkTableEntry tx = table.getEntry("tx");
+  // NetworkTableEntry tx = table.getEntry("tx");
   NetworkTableEntry tv = table.getEntry("tv");
 
-   x = tx.getDouble(0);
+  //  x = tx.getDouble(0);
    v = tv.getDouble(0);
+   targetPose = table.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
+    targetId = table.getEntry("tid").getInteger(0);
+       // System.out.println(valid);
+       System.out.println("id: "+targetId);
 }
 public static double getDisatnce(){
   double height = 0;
@@ -62,13 +68,17 @@ public static double getDisatnce(){
   return(targetHight - height)/Math.tan(Math.toRadians(angle + targetAngle));
 }
 public double getX(){
-  System.out.println(x);
-  return x;
+  // System.out.println(x);
+  return targetPose[0];
 }
 public double getV(){
   System.out.println(v);
   return v;
 }
+public double getYaw(){
+  return targetPose[4];
+}
+
 
 
   // void apriltagVisionThreadProc() {

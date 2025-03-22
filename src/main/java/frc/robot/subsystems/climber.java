@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
@@ -16,7 +17,9 @@ public class climber extends SubsystemBase {
   /** Creates a new climber. */
  TalonFX climbb;
  final PositionVoltage request;
-  DigitalInput limSwitch= new DigitalInput(0);
+  
+  private double point;
+  // DigitalInput limSwitch= new DigitalInput(0);
   public climber() {
     climbb = new TalonFX(25);
       var slot0Configs = new Slot0Configs();
@@ -25,31 +28,46 @@ public class climber extends SubsystemBase {
     climbb.getConfigurator().apply(slot0Configs);
     request = new PositionVoltage(0).withSlot(0);
 
-   
-    //  System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
   }
-  public void rise(){
-    // climbb.set(10);
-    if(limSwitch.get()){
-      climbb.set(10);
-    
+  public void turnToPoint(){
+    // System.out.println(elMotor.getRotorPosition().getValue());
+    if(Math.abs(point-climbb.getRotorPosition().getValueAsDouble())>OperatorConstants.kElDeadBand){
+      climbb.setControl(request.withPosition(point));
     }
     else{
       climbb.set(0);
-     
     }
-  }
-  public void descend(){
-    //  if(!limSwitch.get()){
-    //   climbb.set(-10);
     
-    // }
-    // else{
-    //   climbb.set(0);
-     
-    // }
-    climbb.set(-10);
+
   }
+  public boolean setThePoint(double goal){
+    point= goal;
+    
+    return Math.abs(point-climbb.getRotorPosition().getValueAsDouble())<OperatorConstants.kElDeadBand;//should be changed
+  }
+  // public void rise(){
+  //   // climbb.set(10);
+  //   if(limSwitch.get()){
+  //     climbb.set(10);
+    
+  //   }
+  //   else{
+  //     climbb.set(0);
+     
+  //   }
+  // }
+  // public void descend(){
+  //   //  if(!limSwitch.get()){
+  //   //   climbb.set(-10);
+    
+  //   // }
+  //   // else{
+  //   //   climbb.set(0);
+     
+  //   // }
+  //   climbb.set(-10);
+  // }
   public void stopClimb(){
     climbb.set(0);
   }

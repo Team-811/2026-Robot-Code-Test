@@ -23,6 +23,6 @@ public class cL1x1 extends SequentialCommandGroup {
   public cL1x1(Elevator el, CommandSwerveDrivetrain drivetrain, rollerClaw rolly, String path, cArm coArm, LimelightHelpers lime) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-     addCommands(new getHorizontalOffset(),new PathPlannerAuto("midL4x1"),new ParallelDeadlineGroup(new WaitCommand(3),new cUpAuto(coArm)), new slowRolly(rolly));
+     addCommands(new PathPlannerAuto("midL4x1"),new ParallelDeadlineGroup(new WaitCommand(3),new cUpAuto(coArm)), new slowRolly(rolly));
   }
 }
