@@ -36,19 +36,23 @@ import org.opencv.imgproc.Imgproc;
 public class limelight extends SubsystemBase {
   // static PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
   /** Called once at the beginning of the robot program. */
+  NetworkTable table;
+  private double x;
+  private double v;
   public limelight() {
     // var visionThread = new Thread(this::apriltagVisionThreadProc);
     // visionThread.setDaemon(true);
     // visionThread.start();
+   
     
   }
 public void periodic(){
-  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+ table = NetworkTableInstance.getDefault().getTable("limelight");
   NetworkTableEntry tx = table.getEntry("tx");
   NetworkTableEntry tv = table.getEntry("tv");
 
-  double x = tx.getDouble(0);
-  double v = tv.getDouble(0);
+   x = tx.getDouble(0);
+   v = tv.getDouble(0);
 }
 public static double getDisatnce(){
   double height = 0;
@@ -56,6 +60,14 @@ public static double getDisatnce(){
   double angle = 0;
   double targetAngle =0;
   return(targetHight - height)/Math.tan(Math.toRadians(angle + targetAngle));
+}
+public double getX(){
+  System.out.println(x);
+  return x;
+}
+public double getV(){
+  System.out.println(v);
+  return v;
 }
 
 

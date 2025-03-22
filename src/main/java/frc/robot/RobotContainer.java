@@ -9,7 +9,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.elevatorCommand;
-import frc.robot.commands.getHorizontalOffset;
+// import frc.robot.commands.getHorizontalOffset;
 import frc.robot.commands.reverseIntakeCommand;
 import frc.robot.commands.slowRolly;
 import frc.robot.commands.toFloor;
@@ -157,13 +157,20 @@ public class RobotContainer {
                 .withRotationalRate(slewLimRote.calculate(-joyRightX())* MaxAngularRate) // Drive counterclockwise with negative X (left)
         )
     );
+    
     el.setDefaultCommand(new elevatorCommand(el));
     // alArm.setDefaultCommand(new AlgieArmCommand(alArm));
     coralArmm.setDefaultCommand(new coralArmCommand(coralArmm));
 
     driverController.rightTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
       .withVelocityX(slewLimY.calculate(joyLeftY())*MaxSpeed*speedScale())
-      .withVelocityY(slewLimX.calculate(-joyLeftX())*MaxSpeed*speedScale())
+      .withVelocityY(slewLimX.calculate(-joyLeftX())*MaxSpeed*speedScale())//-joyLeftX()
+      .withRotationalRate(slewLimRote.calculate(-joyRightX())* MaxAngularRate)
+      ).ignoringDisable(true));
+
+      driverController.leftTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
+      .withVelocityX(slewLimY.calculate(joyLeftY())*MaxSpeed*speedScale())
+      .withVelocityY(slewLimX.calculate(limeX())*MaxSpeed*speedScale())//-joyLeftX()
       .withRotationalRate(slewLimRote.calculate(-joyRightX())* MaxAngularRate)
       ).ignoringDisable(true));
 
@@ -171,7 +178,7 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    driverController.leftTrigger().whileTrue(drivetrain.applyRequest(() -> brake));
+    // driverController.leftTrigger().whileTrue(drivetrain.applyRequest(() -> brake));
     // driverController.b().whileTrue(drivetrain.applyRequest(() ->
     //     point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
     // ));
@@ -194,8 +201,8 @@ public class RobotContainer {
         driverController.a().whileTrue(new toL1(el));
         driverController.x().whileTrue(new toL2(el));
         driverController.y().whileTrue(new toL3(el));
-        // driverController.b().whileTrue(new toL4(el));
-      driverController.b().whileTrue(new getHorizontalOffset());
+        driverController.b().whileTrue(new toL4(el));
+      // driverController.b().whileTrue(new getHorizontalOffset());
 
       
       OpController.leftTrigger().whileTrue(new IntakeCommand(rolly));
@@ -237,6 +244,10 @@ public double joyLeftY(){
         return leftY;
     }
     return 0;
+}
+public double limeX(){
+  double limeLeftX = lime.getX();
+  return limeLeftX;
 }
 public double speedScale(){
   if(driverController.leftBumper().getAsBoolean())
