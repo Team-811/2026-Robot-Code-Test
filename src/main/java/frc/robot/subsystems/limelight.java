@@ -77,7 +77,7 @@ public double getV(){
 }
 public double getYaw(){
   System.out.println(targetPose[4]);
-  return targetPose[4];
+  return targetPose[4]*v;
 }
 public double getY(){
   return targetPose[1];

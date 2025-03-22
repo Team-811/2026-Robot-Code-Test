@@ -101,6 +101,7 @@ public class RobotContainer {
               private SlewRateLimiter slewLimY = new SlewRateLimiter(1.5);
           private SlewRateLimiter slewLimX = new SlewRateLimiter(1.5);
           private SlewRateLimiter slewLimRote = new SlewRateLimiter(1.5);
+          private SlewRateLimiter slewLimRoteLime = new SlewRateLimiter(1.5);
         
           private final RobotCentric robotCentric = new SwerveRequest.RobotCentric()
             .withDeadband(MaxSpeed*0.05).withRotationalDeadband(MaxAngularRate*0.1)
@@ -171,7 +172,7 @@ public class RobotContainer {
       driverController.leftTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
       .withVelocityX(slewLimY.calculate(limeY())*MaxSpeed*speedScale())//loyLeftY
       .withVelocityY(slewLimX.calculate(limeX())*MaxSpeed*speedScale())//-joyLeftX()
-      .withRotationalRate((limeYaw()))//-jotRightX
+      .withRotationalRate(slewLimRoteLime.calculate(limeYaw()))//-jotRightX
       ).ignoringDisable(true));
 
 
