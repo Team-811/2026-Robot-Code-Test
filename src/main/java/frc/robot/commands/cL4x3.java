@@ -8,6 +8,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.cArm;
@@ -21,7 +22,7 @@ public class cL4x3 extends ParallelCommandGroup {
   public cL4x3(Elevator el, CommandSwerveDrivetrain drivetrain, rollerClaw rolly, String path, cArm coArm) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new PathPlannerAuto("sideL1x1"), new ParallelDeadlineGroup(new cUpAuto(coArm)).andThen(new reverseIntakeCommand(rolly)));
+    addCommands(new PathPlannerAuto("sideL1x1"), new ParallelDeadlineGroup(new WaitCommand(3),new cMid(coArm)).andThen(new slowRolly(rolly)));
  
   }
 }

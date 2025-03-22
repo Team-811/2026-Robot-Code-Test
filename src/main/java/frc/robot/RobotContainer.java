@@ -9,6 +9,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.elevatorCommand;
+import frc.robot.commands.getHorizontalOffset;
 import frc.robot.commands.reverseIntakeCommand;
 import frc.robot.commands.slowRolly;
 import frc.robot.commands.toFloor;
@@ -128,8 +129,8 @@ public class RobotContainer {
     autoChooser= new SendableChooser<String>();
     autoChooser.addOption("midL4x1", "midL4x1");
     autoChooser.addOption("midL1x1", "midL1x1");
-    autoChooser.addOption("midL4x2", "midL4x2");
-    autoChooser.addOption("midL4x3", "midL4x3");
+    autoChooser.addOption("sideL4x1", "sideL4x1");
+    autoChooser.addOption("sideL1x1", "sideL1x1");
     autoChooser.addOption("Ex Auto", "Ex Auto");
 
     SmartDashboard.putData("autoChooser",autoChooser);
@@ -193,8 +194,8 @@ public class RobotContainer {
         driverController.a().whileTrue(new toL1(el));
         driverController.x().whileTrue(new toL2(el));
         driverController.y().whileTrue(new toL3(el));
-        driverController.b().whileTrue(new toL4(el));
-
+        // driverController.b().whileTrue(new toL4(el));
+      driverController.b().whileTrue(new getHorizontalOffset());
 
       
       OpController.leftTrigger().whileTrue(new IntakeCommand(rolly));
@@ -260,7 +261,7 @@ public double speedScale(){
         auto=new cL4x1(el, drivetrain, rolly, Choice, coralArmm);
         break;
       case "midL1x1":
-        auto = new cL1x1(el, drivetrain, rolly, Choice, coralArmm);
+        auto = new cL1x1(el, drivetrain, rolly, Choice, coralArmm, null);
         break;
       case "sideL4x1":
       auto = new cL4x2(el, drivetrain, rolly, Choice, coralArmm);

@@ -8,14 +8,23 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 public class climber extends SubsystemBase {
   /** Creates a new climber. */
  TalonFX climbb;
+ final PositionVoltage request;
   DigitalInput limSwitch= new DigitalInput(0);
   public climber() {
     climbb = new TalonFX(25);
+      var slot0Configs = new Slot0Configs();
+   slot0Configs.kG =5;
+
+    climbb.getConfigurator().apply(slot0Configs);
+    request = new PositionVoltage(0).withSlot(0);
+
    
     //  System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXX");
   }
@@ -47,6 +56,6 @@ public class climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println(limSwitch.get());
+    // System.out.println(limSwitch.get());
   }
 }
