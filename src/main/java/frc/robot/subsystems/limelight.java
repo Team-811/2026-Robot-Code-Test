@@ -58,7 +58,7 @@ public void periodic(){
    targetPose = table.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
     targetId = table.getEntry("tid").getInteger(0);
        // System.out.println(valid);
-       System.out.println("id: "+targetId);
+      //  System.out.println("id: "+targetId);
 }
 public static double getDisatnce(){
   double height = 0;
@@ -72,10 +72,11 @@ public double getX(){
   return targetPose[0];
 }
 public double getV(){
-  System.out.println(v);
+  // System.out.println(v);
   return v;
 }
 public double getYaw(){
+  System.out.println(targetPose[4]);
   return targetPose[4];
 }
 public double getY(){
