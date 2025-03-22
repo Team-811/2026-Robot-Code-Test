@@ -78,7 +78,9 @@ public double getV(){
 public double getYaw(){
   return targetPose[4];
 }
-
+public double getY(){
+  return targetPose[1];
+}
 
 
   // void apriltagVisionThreadProc() {
