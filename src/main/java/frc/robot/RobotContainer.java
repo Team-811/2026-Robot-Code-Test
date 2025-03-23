@@ -172,7 +172,7 @@ public class RobotContainer {
       driverController.leftTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
       .withVelocityX(slewLimY.calculate(limeY())*MaxSpeed*speedScale())//loyLeftY
       .withVelocityY(slewLimX.calculate(limeX())*MaxSpeed*speedScale())//-joyLeftX()
-      .withRotationalRate(slewLimRoteLime.calculate(limeYaw()))//-jotRightX
+      .withRotationalRate(slewLimRoteLime.calculate(limeYaw())/60)//-jotRightX
       ).ignoringDisable(true));
 
 
