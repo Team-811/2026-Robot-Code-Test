@@ -9,12 +9,6 @@
           "data": {
             "pathName": "toSource"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "fromSource"
-          }
         }
       ]
     }

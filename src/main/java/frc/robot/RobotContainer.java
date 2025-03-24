@@ -11,6 +11,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.elevatorCommand;
 // import frc.robot.commands.getHorizontalOffset;
 import frc.robot.commands.reverseIntakeCommand;
+import frc.robot.commands.sideC_L4x2;
 import frc.robot.commands.slowRolly;
 import frc.robot.commands.toFloor;
 // import frc.robot.commands.aDown;
@@ -28,6 +29,7 @@ import frc.robot.commands.toL2;
 import frc.robot.commands.toL3;
 import frc.robot.commands.toL4;
 import frc.robot.commands.cUp;
+import frc.robot.commands.climberCommand;
 import frc.robot.commands.climberDescend;
 import frc.robot.commands.climberRise;
 
@@ -68,7 +70,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 // import frc.robot.subsystems.aClaw;
 import frc.robot.subsystems.cArm;
-// import frc.robot.subsystems.cClaw;
+import frc.robot.subsystems.cClaw;
 import frc.robot.subsystems.climber;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -79,7 +81,7 @@ import frc.robot.subsystems.climber;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
         private double speed = OperatorConstants.kSpeed;
-        // public static cClaw corClaw = new cClaw();
+        public static cClaw climbOpen = new cClaw();
       //  public static aClaw alClaw = new aClaw();
         private final limelight lime = new limelight();
         private final Elevator el = new Elevator();
@@ -133,6 +135,8 @@ public class RobotContainer {
     autoChooser.addOption("sideL4x1", "sideL4x1");
     autoChooser.addOption("sideL1x1", "sideL1x1");
     autoChooser.addOption("Ex Auto", "Ex Auto");
+    autoChooser.addOption("sideC_L4x2", "sideC_L4x2");
+
 
     SmartDashboard.putData("autoChooser",autoChooser);
     
@@ -162,6 +166,7 @@ public class RobotContainer {
     el.setDefaultCommand(new elevatorCommand(el));
     // alArm.setDefaultCommand(new AlgieArmCommand(alArm));
     coralArmm.setDefaultCommand(new coralArmCommand(coralArmm));
+    climb.setDefaultCommand(new climberCommand(climb));
 
     driverController.rightTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
       .withVelocityX(slewLimY.calculate(joyLeftY())*MaxSpeed*speedScale())
@@ -183,7 +188,7 @@ public class RobotContainer {
     // driverController.b().whileTrue(drivetrain.applyRequest(() ->
     //     point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
     // ));
-    OpController.back().onChange(new InstantCommand(()->System.out.println(drivetrain.getPigeon2()), drivetrain));
+    // OpController.back().onChange(new InstantCommand(()->System.out.println(drivetrain.getPigeon2()), drivetrain));
     
     driverController.rightBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.fastSpeed));
     driverController.leftBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.slowSpeed));
@@ -221,6 +226,7 @@ public class RobotContainer {
       // OpController.a().whileTrue(new aUp(alArm));
       // OpController.y().whileTrue(new aDown(alArm));
       OpController.start().whileTrue(new cSpinTogether(rolly));
+      OpController.back().whileTrue(new InstantCommand(()->climbOpen.open()));
       
     drivetrain.registerTelemetry(logger::telemeterize);  
 
@@ -282,13 +288,17 @@ public double speedScale(){
         auto=new cL4x1(el, drivetrain, rolly, Choice, coralArmm);
         break;
       case "midL1x1":
-        auto = new cL1x1(el, drivetrain, rolly, Choice, coralArmm, null);
+        auto = new cL1x1(el, drivetrain, rolly, Choice, coralArmm);
         break;
       case "sideL4x1":
       auto = new cL4x2(el, drivetrain, rolly, Choice, coralArmm);
+
       break;
       case "sideL1x1":
       auto = new cL4x3(el, drivetrain, rolly, Choice, coralArmm);
+      break;
+      case "sideC_L4x2":
+      auto = new sideC_L4x2(el, drivetrain, rolly, Choice, coralArmm);
       break;
 
     case "taxi":

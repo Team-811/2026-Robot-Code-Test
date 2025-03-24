@@ -22,8 +22,14 @@ public class climber extends SubsystemBase {
   // DigitalInput limSwitch= new DigitalInput(0);
   public climber() {
     climbb = new TalonFX(25);
+    climbb.setPosition(0);
       var slot0Configs = new Slot0Configs();
-   slot0Configs.kG =5;
+      slot0Configs.kV = 0;
+      slot0Configs.kA = 0;
+     slot0Configs.kP = 0.2;
+     slot0Configs.kI = 0;
+     slot0Configs.kD = 0;
+     slot0Configs.kG =0;
 
     climbb.getConfigurator().apply(slot0Configs);
     request = new PositionVoltage(0).withSlot(0);
@@ -32,7 +38,7 @@ public class climber extends SubsystemBase {
   }
   public void turnToPoint(){
     // System.out.println(elMotor.getRotorPosition().getValue());
-    if(Math.abs(point-climbb.getRotorPosition().getValueAsDouble())>OperatorConstants.kElDeadBand){
+    if(Math.abs(point-climbb.getRotorPosition().getValueAsDouble())>1){
       climbb.setControl(request.withPosition(point));
     }
     else{
@@ -41,10 +47,10 @@ public class climber extends SubsystemBase {
     
 
   }
-  public boolean setThePoint(double goal){
+  public void setThePoint(double goal){
     point= goal;
     
-    return Math.abs(point-climbb.getRotorPosition().getValueAsDouble())<OperatorConstants.kElDeadBand;//should be changed
+    // return Math.abs(point-climbb.getRotorPosition().getValueAsDouble())<OperatorConstants.kElDeadBand;//should be changed
   }
   // public void rise(){
   //   // climbb.set(10);

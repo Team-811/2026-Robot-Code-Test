@@ -21,6 +21,7 @@ public class Robot extends TimedRobot {
   private SparkMax motor;
   private final RobotContainer m_robotContainer;
   private TalonFX jerry;
+  private TalonFX climbMotor;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,6 +33,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     // motor = new SparkMax(22, MotorType.kBrushless);
     // jerry = new TalonFX(24);
+    // climbMotor = new TalonFX(25);
   }
 
   /**
@@ -50,6 +52,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // motor.set(0.3);
     // jerry.set(0.3);
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
