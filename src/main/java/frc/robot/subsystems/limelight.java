@@ -41,6 +41,8 @@ public class limelight extends SubsystemBase {
   private double v;
   double[] targetPose;
   private long targetId;
+  double leftOffset;
+  double rightOffset;
   public limelight() {
     // var visionThread = new Thread(this::apriltagVisionThreadProc);
     // visionThread.setDaemon(true);
@@ -59,6 +61,9 @@ public void periodic(){
     targetId = table.getEntry("tid").getInteger(0);
        // System.out.println(valid);
       //  System.out.println("id: "+targetId);
+      leftOffset=0;
+      rightOffset=0;
+
 }
 public static double getDisatnce(){
   double height = 0;
@@ -81,6 +86,13 @@ public double getYaw(){
 }
 public double getY(){
   return targetPose[1];
+}
+public double getLeftX(){
+  return targetPose[0]-0.1
+  ;
+}
+public double getRightX(){
+  return targetPose[0]+0.1;
 }
 
 

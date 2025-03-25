@@ -40,13 +40,21 @@ public class cL4x2 extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
        addCommands(new PathPlannerAuto("sideL1x1"), new ParallelDeadlineGroup(new toL4(el), new cUpAuto(coArm), drivetrain.applyRequest(()->robotCentric
        .withVelocityX(slewLimY.calculate(limeY())*MaxSpeed)
-       .withVelocityY(slewLimX.calculate(limeX())*MaxSpeed)
+       .withVelocityY(slewLimX.calculate(limeX_Left())*MaxSpeed)
        .withRotationalRate(slewLimRoteLime.calculate(limeYaw())/60)
        ).ignoringDisable(true)).andThen(new reverseIntakeCommand(rolly)));
   }
   public double limeX(){
     double limeLeftX = lime.getX();
     return limeLeftX;
+  }
+  public double limeX_Left(){
+    double limeXLeft = lime.getLeftX();
+    return limeXLeft;
+  }
+  public double limeX_Right(){
+    double limeXRight = lime.getRightX();
+    return limeXRight;
   }
   public double limeYaw(){
     double limeRightx = lime.getYaw();

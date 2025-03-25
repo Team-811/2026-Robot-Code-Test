@@ -168,15 +168,26 @@ public class RobotContainer {
     coralArmm.setDefaultCommand(new coralArmCommand(coralArmm));
     climb.setDefaultCommand(new climberCommand(climb));
 
-    driverController.rightTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
+    driverController.rightBumper().whileTrue(drivetrain.applyRequest(()->robotCentric
       .withVelocityX(slewLimY.calculate(joyLeftY())*MaxSpeed*speedScale())
       .withVelocityY(slewLimX.calculate(-joyLeftX())*MaxSpeed*speedScale())//-joyLeftX()
       .withRotationalRate(slewLimRote.calculate(-joyRightX())* MaxAngularRate)
       ).ignoringDisable(true));
+      driverController.leftBumper().whileTrue(drivetrain.applyRequest(()->robotCentric
+      .withVelocityX(slewLimY.calculate(limeY())*MaxSpeed*speedScale())//loyLeftY
+      .withVelocityY(slewLimX.calculate(limeX())*MaxSpeed*speedScale())//-joyLeftX()
+      .withRotationalRate(slewLimRoteLime.calculate(limeYaw())/60)//-jotRightX
+      ).ignoringDisable(true));
+
 
       driverController.leftTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
       .withVelocityX(slewLimY.calculate(limeY())*MaxSpeed*speedScale())//loyLeftY
-      .withVelocityY(slewLimX.calculate(limeX())*MaxSpeed*speedScale())//-joyLeftX()
+      .withVelocityY(slewLimX.calculate(limeX_Left())*MaxSpeed*speedScale())//-joyLeftX()
+      .withRotationalRate(slewLimRoteLime.calculate(limeYaw())/60)//-jotRightX
+      ).ignoringDisable(true));
+      driverController.rightTrigger().whileTrue(drivetrain.applyRequest(()->robotCentric
+      .withVelocityX(slewLimY.calculate(limeY())*MaxSpeed*speedScale())//loyLeftY
+      .withVelocityY(slewLimX.calculate(limeX_Right())*MaxSpeed*speedScale())//-joyLeftX()
       .withRotationalRate(slewLimRoteLime.calculate(limeYaw())/60)//-jotRightX
       ).ignoringDisable(true));
 
@@ -190,8 +201,8 @@ public class RobotContainer {
     // ));
     // OpController.back().onChange(new InstantCommand(()->System.out.println(drivetrain.getPigeon2()), drivetrain));
     
-    driverController.rightBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.fastSpeed));
-    driverController.leftBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.slowSpeed));
+    // driverController.rightBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.fastSpeed));
+    // driverController.leftBumper().whileTrue(new InstantCommand(()->speed= OperatorConstants.slowSpeed));
     // driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
     // driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
     driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
@@ -261,8 +272,17 @@ public double limeYaw(){
   return limeRightx;
 }
 public double limeY(){
+  
   double limeleftY = lime.getV()*0.5;
   return limeleftY;
+}
+public double limeX_Left(){
+  double limeXLeft = lime.getLeftX();
+  return limeXLeft;
+}
+public double limeX_Right(){
+  double limeXRight = lime.getRightX();
+  return limeXRight;
 }
 
 public double speedScale(){
