@@ -63,11 +63,11 @@ public class climber extends SubsystemBase {
      
   //   }
   // }
-  // public void descend(){
-  //   //  if(!limSwitch.get()){
-  //   //   climbb.set(-10);
+  public void descend(){
+
+      climbb.set(10);
     
-  //   // }
+    }
   //   // else{
   //   //   climbb.set(0);
      

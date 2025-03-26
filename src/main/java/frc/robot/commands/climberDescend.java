@@ -19,13 +19,13 @@ public class climberDescend extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climb.setThePoint(0);
+    climb.setThePoint(10);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   
+  //  climb.descend();
   }
 
   // Called once the command ends or is interrupted.

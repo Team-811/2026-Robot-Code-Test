@@ -39,15 +39,20 @@ public class cL1x1 extends SequentialCommandGroup {
   public cL1x1(Elevator el, CommandSwerveDrivetrain drivetrain, rollerClaw rolly, String path, cArm coArm) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-     addCommands(new PathPlannerAuto("midL4x1"),new ParallelDeadlineGroup(new WaitCommand(3),drivetrain.applyRequest(()->robotCentric
+     addCommands(new PathPlannerAuto("midL4x1"),new ParallelDeadlineGroup(new WaitCommand(1
+     ),drivetrain.applyRequest(()->robotCentric
      .withVelocityX(slewLimY.calculate(limeY())*MaxSpeed)
-     .withVelocityY(slewLimX.calculate(limeX_Left())*MaxSpeed)
+     .withVelocityY(slewLimX.calculate(limeX())*MaxSpeed)
      .withRotationalRate(slewLimRoteLime.calculate(limeYaw())/60)
      ).ignoringDisable(true),new cUpAuto(coArm)), new slowRolly(rolly));
   }
   public double limeX_Left(){
     double limeXLeft = lime.getLeftX();
     return limeXLeft;
+  }
+  public double limeX(){
+    double limeLeftX = lime.getX();
+    return limeLeftX;
   }
   public double limeX_Right(){
     double limeXRight = lime.getRightX();

@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 // import frc.robot.commands.AlgieArmCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.L1x1andBack;
 import frc.robot.commands.elevatorCommand;
 // import frc.robot.commands.getHorizontalOffset;
 import frc.robot.commands.reverseIntakeCommand;
@@ -136,6 +137,7 @@ public class RobotContainer {
     autoChooser.addOption("sideL1x1", "sideL1x1");
     autoChooser.addOption("Ex Auto", "Ex Auto");
     autoChooser.addOption("sideC_L4x2", "sideC_L4x2");
+    autoChooser.addOption("try", "try");
 
 
     SmartDashboard.putData("autoChooser",autoChooser);
@@ -227,6 +229,7 @@ public class RobotContainer {
 
 
       OpController.leftBumper().whileTrue(new cUp(coralArmm)); 
+
       OpController.rightBumper().whileTrue(new cDown(coralArmm));
 
       OpController.b().whileTrue(new cMid(coralArmm));
@@ -272,7 +275,7 @@ public double limeYaw(){
   return limeRightx;
 }
 public double limeY(){
-  
+
   double limeleftY = lime.getV()*0.5;
   return limeleftY;
 }
@@ -317,9 +320,12 @@ public double speedScale(){
       case "sideL1x1":
       auto = new cL4x3(el, drivetrain, rolly, Choice, coralArmm);
       break;
-      case "sideC_L4x2":
-      auto = new sideC_L4x2(el, drivetrain, rolly, Choice, coralArmm);
+      case "try":
+      auto = new L1x1andBack(el, drivetrain, rolly, Choice, coralArmm);
       break;
+
+      
+      
 
     case "taxi":
       default: 
