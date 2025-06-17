@@ -79,8 +79,8 @@ public class rollerClaw extends SubsystemBase {
     rolly2.set(0.31);
   }
   public void L1Rolly(){
-    rolly1.set(0.09);
-    rolly2.set(-0.09);
+    rolly1.set(0.075);
+    rolly2.set(-0.075);
   }
 
 

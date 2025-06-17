@@ -26,6 +26,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * This is a demo program showing the detection of AprilTags. The image is acquired from the USB
@@ -38,17 +39,25 @@ public class limelight extends SubsystemBase {
   /** Called once at the beginning of the robot program. */
   NetworkTable table;
   // private double x;
-  private double v;
+  private long v;
   double[] targetPose;
   private long targetId;
   double leftOffset;
   double rightOffset;
+ private Timer timer;
+ boolean isTargeting = false;
+ boolean timerIsStarted = false;
   public limelight() {
     // var visionThread = new Thread(this::apriltagVisionThreadProc);
     // visionThread.setDaemon(true);
     // visionThread.start();
-   
+    timer = new Timer();
     
+  }
+  public void setTargeting(boolean targetingState){
+    isTargeting= targetingState;
+    System.out.println(isTargeting);
+
   }
 public void periodic(){
  table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -56,7 +65,7 @@ public void periodic(){
   NetworkTableEntry tv = table.getEntry("tv");
 
   //  x = tx.getDouble(0);
-   v = tv.getDouble(0);
+   v = tv.getInteger(0);
    targetPose = table.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
     targetId = table.getEntry("tid").getInteger(0);
        // System.out.println(valid);
@@ -78,18 +87,45 @@ public double getX(){
 }
 public double getV(){
   // System.out.println(v);
+
   return v;
 }
 public double getYaw(){
-  System.out.println(targetPose[4]);
+  // System.out.println(targetPose[4]);
   return targetPose[4]*v;
 }
 public double getY(){
-  return targetPose[1];
+  return targetPose[1]+0.1;
 }
 public double getLeftX(){
-  return targetPose[0]-0.1
-  ;
+  return targetPose[0]-0.1;
+//   System.out.println("timer "+timer.get());
+//   System.out.println("v" + v);
+//   System.out.println("timer is started: " +timerIsStarted);
+//   if(!isTargeting)
+//   return 0;
+//   System.out.println("hi");
+//   if(targetPose[0] - 0.1 < 0.01 && targetPose[0]-0.1>-0.01)
+//   return 0;
+//   if(v==0 && !timerIsStarted){
+//     System.out.println("hello");
+//     timerIsStarted = true;
+//   timer.start();
+//   timer.reset();
+//   return 0;
+// }
+//   else if(timer.get()<0.5){
+//     return targetPose[0]-0.1;
+//   }
+//   else{
+//     timer.stop();
+//     timerIsStarted = false;
+//     isTargeting = false;
+//     return 0 ;
+//   }
+
+
+  // return targetPose[0]-0.1;
 }
 public double getRightX(){
   return targetPose[0]+0.1;
