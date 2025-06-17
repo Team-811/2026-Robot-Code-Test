@@ -19,7 +19,9 @@ import edu.wpi.first.networktables.IntegerArrayPublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.geometry.Pose2d;
 
 import java.util.ArrayList;
 import org.opencv.core.Mat;
@@ -27,6 +29,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.MathUtil;
 
 /**
  * This is a demo program showing the detection of AprilTags. The image is acquired from the USB
@@ -42,16 +45,25 @@ public class limelight extends SubsystemBase {
   private long v;
   double[] targetPose;
   private long targetId;
-  double leftOffset;
-  double rightOffset;
+  // double leftOffset;
+  // double rightOffset;
  private Timer timer;
  boolean isTargeting = false;
  boolean timerIsStarted = false;
+ Distance positionX;
+ NetworkTableEntry tv;
+ Distance positionY;
+ double targetCenter;
+ Pose2d myPose = new Pose2d();
+
+
   public limelight() {
     // var visionThread = new Thread(this::apriltagVisionThreadProc);
     // visionThread.setDaemon(true);
     // visionThread.start();
     timer = new Timer();
+    positionX = myPose.getMeasureX();
+    positionY = myPose.getMeasureY();
     
   }
   public void setTargeting(boolean targetingState){
@@ -62,7 +74,7 @@ public class limelight extends SubsystemBase {
 public void periodic(){
  table = NetworkTableInstance.getDefault().getTable("limelight");
   // NetworkTableEntry tx = table.getEntry("tx");
-  NetworkTableEntry tv = table.getEntry("tv");
+ tv = table.getEntry("tv");
 
   //  x = tx.getDouble(0);
    v = tv.getInteger(0);
@@ -70,8 +82,8 @@ public void periodic(){
     targetId = table.getEntry("tid").getInteger(0);
        // System.out.println(valid);
       //  System.out.println("id: "+targetId);
-      leftOffset=0;
-      rightOffset=0;
+      // leftOffset=0;
+      // rightOffset=0;
 
 }
 public static double getDisatnce(){
@@ -92,10 +104,14 @@ public double getV(){
 }
 public double getYaw(){
   // System.out.println(targetPose[4]);
-  return targetPose[4]*v;
+  // return targetPose[4]*v;
+  return targetPose[4] * Math.PI/180;
 }
 public double getY(){
-  return targetPose[1]+0.1;
+  return 0;
+}
+public double getZ(){
+  return targetPose[2];
 }
 public double getLeftX(){
   return targetPose[0]-0.1;
@@ -130,116 +146,80 @@ public double getLeftX(){
 public double getRightX(){
   return targetPose[0]+0.1;
 }
+public Distance getMeasureY(){
+  System.out.println(positionX);
+ return positionX;
+
+}
+public Distance getMeasureX(){
+  System.out.println(positionY);
+return positionY;
+}
+public boolean hasTarget(){
+  return tv.getDouble(0) ==1;
+}
+public double targetXError() {
+  return getX();
+ }
+public double AimTargetXDutyCycle(){
+  if (! hasTarget()) {
+    return 0;
+  }
+  double target;
+  double Error =  targetXError();
 
 
-  // void apriltagVisionThreadProc() {
-  //   var detector = new AprilTagDetector();
-  //   // look for tag36h11, correct 1 error bit (hamming distance 1)
-  //   // hamming 1 allocates 781KB, 2 allocates 27.4 MB, 3 allocates 932 MB
-  //   // max of 1 recommended for RoboRIO 1, while hamming 2 is feasible on the RoboRIO 2
-  //   detector.addFamily("tag36h11", 1);
+    target= MathUtil.clamp(
+ (
+    Error
 
-  //   // Set up Pose Estimator - parameters are for a Microsoft Lifecam HD-3000
-  //   // (https://www.chiefdelphi.com/t/wpilib-apriltagdetector-sample-code/421411/21)
-  //   var poseEstConfig =
-  //       new AprilTagPoseEstimator.Config(
-  //           0.1651, 699.3778103158814, 677.7161226393544, 345.6059345433618, 207.12741326228522);
-  //   var estimator = new AprilTagPoseEstimator(poseEstConfig);
+  ),-0.8,0.8); 
 
-  //   // Get the UsbCamera from CameraServer
-  //   UsbCamera camera = CameraServer.startAutomaticCapture();
-  //   // Set the resolution
-  //   camera.setResolution(640, 480);
 
-  //   // Get a CvSink. This will capture Mats from the camera
-  //   CvSink cvSink = CameraServer.getVideo();
-  //   // Setup a CvSource. This will send images back to the Dashboard
-  //   CvSource outputStream = CameraServer.putVideo("Detected", 640, 480);
+ 
+ return target;
+ 
+ }
+ public double targetZError(){
+  return getZ();
+}
+public double targetYawError() {
+  return -getYaw();
+ }
+ public double AimTargetZDutyCycle(){
+  if (! hasTarget()) return 0;
+double target =
+ MathUtil.clamp(targetZError(),-0.8,0.8);
 
-  //   // Mats are very memory expensive. Lets reuse these.
-  //   var mat = new Mat();
-  //   var grayMat = new Mat();
 
-  //   // Instantiate once
-  //   ArrayList<Long> tags = new ArrayList<>();
-  //   var outlineColor = new Scalar(0, 255, 0);
-  //   var crossColor = new Scalar(0, 0, 255);
+  return 
+   
+  target;
+ }
+public double RobotXDutyCycle(){
+  if (!hasTarget()) return 0;
+ double target = MathUtil.clamp((-Math.sin(getYaw())*AimTargetXDutyCycle())+(Math.cos(getYaw())
+ 
+ *AimTargetZDutyCycle()),-.8,.8);
 
-  //   // We'll output to NT
-  //   NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltags");
-  //   IntegerArrayPublisher pubTags = tagsTable.getIntegerArrayTopic("tags").publish();
+ return target;
+}
 
-  //   // This cannot be 'true'. The program will never exit if it is. This
-  //   // lets the robot stop this thread when restarting robot code or
-  //   // deploying.
-  //   while (!Thread.interrupted()) {
-  //     // Tell the CvSink to grab a frame from the camera and put it
-  //     // in the source mat.  If there is an error notify the output.
-  //     if (cvSink.grabFrame(mat) == 0) {
-  //       // Send the output the error.
-  //       outputStream.notifyError(cvSink.getError());
-  //       // skip the rest of the current iteration
-  //       continue;
-  //     }
+public double AimTargetYawDutyCycle(){
+  if (! hasTarget()) return 0;
+  double target = MathUtil.clamp( ((targetYawError())*1.05),-0.8,0.8);
+  return target;
+}
 
-  //     Imgproc.cvtColor(mat, grayMat, Imgproc.COLOR_RGB2GRAY);
+public double RobotYDutyCycle(){
+  if (!hasTarget()) return 0;
+  double target = MathUtil.clamp((Math.cos(getYaw())*AimTargetXDutyCycle())+
+  (Math.sin(getYaw())*AimTargetZDutyCycle()),-.8,.8);
+  return 
+   target;
+}
 
-  //     AprilTagDetection[] detections = detector.detect(grayMat);
 
-  //     // have not seen any tags yet
-  //     tags.clear();
 
-  //     for (AprilTagDetection detection : detections) {
-  //       // remember we saw this tag
-  //       tags.add((long) detection.getId());
-
-  //       // draw lines around the tag
-  //       for (var i = 0; i <= 3; i++) {
-  //         var j = (i + 1) % 4;
-  //         var pt1 = new Point(detection.getCornerX(i), detection.getCornerY(i));
-  //         var pt2 = new Point(detection.getCornerX(j), detection.getCornerY(j));
-  //         Imgproc.line(mat, pt1, pt2, outlineColor, 2);
-  //       }
-
-  //       // mark the center of the tag
-  //       var cx = detection.getCenterX();
-  //       var cy = detection.getCenterY();
-  //       var ll = 10;
-  //       Imgproc.line(mat, new Point(cx - ll, cy), new Point(cx + ll, cy), crossColor, 2);
-  //       Imgproc.line(mat, new Point(cx, cy - ll), new Point(cx, cy + ll), crossColor, 2);
-
-  //       // identify the tag
-  //       Imgproc.putText(
-  //           mat,
-  //           Integer.toString(detection.getId()),
-  //           new Point(cx + ll, cy),
-  //           Imgproc.FONT_HERSHEY_SIMPLEX,
-  //           1,
-  //           crossColor,
-  //           3);
-
-  //       // determine pose
-  //       Transform3d pose = estimator.estimate(detection);
-
-  //       // put pose into dashboard
-  //       Rotation3d rot = pose.getRotation();
-  //       tagsTable
-  //           .getEntry("pose_" + detection.getId())
-  //           .setDoubleArray(
-  //               new double[] {
-  //                 pose.getX(), pose.getY(), pose.getZ(), rot.getX(), rot.getY(), rot.getZ()
-  //               });
-  //     }
-
-  //     // put list of tags onto dashboard
-  //     pubTags.set(tags.stream().mapToLong(Long::longValue).toArray());
-
-  //     // Give the output stream a new image to display
-  //     outputStream.putFrame(mat);
-  //   }
-
-  //   pubTags.close();
-  //   detector.close();
-  // }
 }
 

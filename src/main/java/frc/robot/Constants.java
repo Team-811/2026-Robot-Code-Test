@@ -34,7 +34,7 @@ public final class Constants {
 
     public static final double fastSpeed =1 ;
     public static final double slowSpeed = 0.3;
-    public static final double normalSpeed = 0.9;
+    public static final double normalSpeed = 0.3;
     public static final double kElDeadBand = 3;
   
   }
